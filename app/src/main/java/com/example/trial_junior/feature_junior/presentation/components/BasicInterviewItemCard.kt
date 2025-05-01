@@ -1,4 +1,5 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list.components
+package com.example.trial_junior.feature_junior.presentation.components
+
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,13 +19,12 @@ import com.example.trial_junior.core.presentation.components.DeleteButton
 import com.example.trial_junior.core.presentation.components.EditButton
 import com.example.trial_junior.core.presentation.components.HostedButton
 import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem
-import com.example.trial_junior.feature_junior.domain.model.SpecialInterviewItem
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpecialInterviewItemCard(
-    specialInterview: SpecialInterviewItem,
+fun BasicInterviewItemCard(
+    basicInterview: BasicInterviewItem,
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
@@ -64,7 +64,7 @@ fun SpecialInterviewItemCard(
                     )
                     Column {
                         Text(
-                            text = "Special Interview with ${specialInterview.childName}",
+                            text = "Interview with ${basicInterview.childName}",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground,
@@ -78,7 +78,7 @@ fun SpecialInterviewItemCard(
                     onClick = { /* No action for status chip */ },
                     label = {
                         Text(
-                            text = if (specialInterview.upcoming) "PENDING" else "SCHEDULED",
+                            text = if (basicInterview.upcoming) "PENDING" else "SCHEDULED",
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
@@ -86,33 +86,24 @@ fun SpecialInterviewItemCard(
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = if (specialInterview.upcoming) Color(0xFFE4851C) else Color(0xFF4CAF50),
+                        containerColor = if (basicInterview.upcoming) Color(0xFFE4851C) else Color(0xFF4CAF50),
                         labelColor = Color.White
                     ),
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
             Text(
-                text = "Guardian: ${specialInterview.guardianName}",
+                text = "Guardian: ${basicInterview.guardianName}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 4.dp)
             )
             Text(
-                text = "Age: ${specialInterview.age}",
+                text = "Age: ${basicInterview.age}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-            Text(
-                text = "Video URL: ${specialInterview.videoUrl}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 16.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 4.dp)
             )
             Divider(
@@ -127,11 +118,17 @@ fun SpecialInterviewItemCard(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
+//                CelebratedButton(
+//                    onCelebratedClick = onCelebratedClick,
+//                    color = MaterialTheme.colorScheme.primary,
+//                    upcoming = basicInterview.upcoming,
+//                    modifier = Modifier.size(48.dp)
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
                 HostedButton(
                     onToggleHostedClick = onToggleHostedClick,
                     color = MaterialTheme.colorScheme.secondary,
-                    upcoming = specialInterview.upcoming,
+                    upcoming = basicInterview.upcoming,
                     modifier = Modifier.size(48.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -152,10 +149,10 @@ fun SpecialInterviewItemCard(
 
 @Preview
 @Composable
-fun SpecialInterviewItemCardPreview() {
+fun BasicInterviewItemCardPreview() {
     TrialJuniorTheme {
-        SpecialInterviewItemCard(
-            specialInterview = SpecialInterviewItem(
+        BasicInterviewItemCard(
+            basicInterview = BasicInterviewItem(
                 childName = "Meba",
                 guardianName = "Freail",
                 guardianEmail = "rita@gmail.com",
@@ -163,7 +160,6 @@ fun SpecialInterviewItemCardPreview() {
                 specialRequests = "Birthday celebration with the ethipis",
                 guardianPhone = 988984673,
                 age = 3,
-                videoUrl = "https://www.youtube.com/watch?v=0wjnk62I01c&list=PPSV" ,
                 id = 1
             ),
             onDeleteClick = {},

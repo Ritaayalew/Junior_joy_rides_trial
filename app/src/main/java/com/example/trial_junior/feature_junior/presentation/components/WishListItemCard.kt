@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list.components
+package com.example.trial_junior.feature_junior.presentation.components
 
 
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import com.example.trial_junior.core.presentation.components.DeleteButton
 import com.example.trial_junior.core.presentation.components.EditButton
 import com.example.trial_junior.core.presentation.components.HostedButton
-import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem
 import com.example.trial_junior.feature_junior.domain.model.WishListItem
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 

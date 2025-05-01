@@ -1,7 +1,6 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list
+package com.example.trial_junior.feature_junior.presentation.viewModels
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import com.example.trial_junior.core.util.ListStrings
 import com.example.trial_junior.feature_junior.data.di.IoDispatcher
 import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem

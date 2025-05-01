@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list
+package com.example.trial_junior.feature_junior.presentation.viewModels
 
 import androidx.compose.runtime.State
 import com.example.trial_junior.core.util.ListStrings

@@ -8,17 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.trial_junior.feature_junior.presentation.invitation_list.BasicInterviewListViewModel
-import com.example.trial_junior.feature_junior.presentation.invitation_list.InvitationListScreen
-import com.example.trial_junior.feature_junior.presentation.invitation_list.InvitationListViewModel
-import com.example.trial_junior.feature_junior.presentation.invitation_list.SpecialInterviewListViewModel
-import com.example.trial_junior.feature_junior.presentation.invitation_list.WishListViewModel
+import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
+import com.example.trial_junior.feature_junior.presentation.viewModels.InvitationListViewModel
+import com.example.trial_junior.feature_junior.presentation.viewModels.SpecialInterviewListViewModel
+import com.example.trial_junior.feature_junior.presentation.viewModels.WishListViewModel
+import com.example.trial_junior.feature_junior.presentation.screens.ExampleScreen
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,10 +42,10 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.InvitationItemListScreen.route
+                        startDestination = Screen.ExampleScreen.route
                     ) {
-                        composable(route = Screen.InvitationItemListScreen.route) {
-                            InvitationListScreen(
+                        composable(route = Screen.ExampleScreen.route) {
+                            ExampleScreen(
                                 navController = navController,
                                 invitationViewModel = invitationViewModel,
                                 wishlistViewModel = wishlistViewModel,

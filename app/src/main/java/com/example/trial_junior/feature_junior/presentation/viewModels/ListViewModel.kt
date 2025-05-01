@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list
+package com.example.trial_junior.feature_junior.presentation.viewModels
 
 
 import androidx.compose.runtime.State
@@ -7,12 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.trial_junior.feature_junior.data.di.IoDispatcher
 import com.example.trial_junior.feature_junior.domain.model.ListItem
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 //@HiltViewModel
 abstract class ListViewModel<T : ListItem>  constructor(

@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list.components
+package com.example.trial_junior.feature_junior.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list
+package com.example.trial_junior.feature_junior.presentation.viewModels
 
 import com.example.trial_junior.feature_junior.domain.model.InvitationItem
 import com.example.trial_junior.feature_junior.domain.util.InvitationItemOrder

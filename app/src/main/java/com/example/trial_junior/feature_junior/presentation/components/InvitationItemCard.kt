@@ -1,4 +1,4 @@
-package com.example.trial_junior.feature_junior.presentation.invitation_list.components
+package com.example.trial_junior.feature_junior.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.CardGiftcard
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -20,7 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import com.example.trial_junior.core.presentation.components.DeleteButton
 import com.example.trial_junior.core.presentation.components.EditButton
 import com.example.trial_junior.core.presentation.components.HostedButton
-import com.example.trial_junior.core.util.ContentDescriptions
 import com.example.trial_junior.feature_junior.domain.model.InvitationItem
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 
