@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.firstjetpack.MyNavigation
-import com.example.trial_junior.MyNavigation
 import com.example.firstjetpack.ui.login.JetLoginTheme
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 
