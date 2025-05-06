@@ -1,4 +1,4 @@
-package com.example.greetingcard
+package com.example.trial_junior
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -130,10 +130,10 @@ fun ProfileScreen(navController: NavHostController) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp) // Add horizontal padding for margins
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .shadow(elevation = 8.dp),
-                shape = RoundedCornerShape(8.dp), // Optional: customize card shape if needed
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8)) // Set card color
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     if (index == 0) {
