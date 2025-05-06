@@ -10,14 +10,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.InvitationListViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.SpecialInterviewListViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.WishListViewModel
 import com.example.trial_junior.feature_junior.presentation.screens.ExampleScreen
+import com.example.trial_junior.feature_junior.presentation.screens.WishListNewUpdateScreen
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,11 +58,23 @@ class MainActivity : ComponentActivity() {
                         }
 
                         // Placeholder for InvitationNewUpdateScreen route
-                        /*
-                        composable(route = Screen.InvitationNewUpdateScreen.route) {
-                            // TODO: Implement InvitationNewUpdateScreen composable
+
+                        composable(
+                            route = Screen.WishListUpdateScreen.route + "?wishListId={wishListId}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "wishListId"
+                                ){
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ){
+                            WishListNewUpdateScreen(
+                                navController = navController
+                            )
                         }
-                        */
+
                     }
                 }
             }

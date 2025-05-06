@@ -27,6 +27,7 @@ import com.example.trial_junior.feature_junior.presentation.components.Invitatio
 import com.example.trial_junior.feature_junior.presentation.components.SortingDrawerOptions
 import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCard
 import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCard
+import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.InvitationListEvent
@@ -89,8 +90,7 @@ fun ExampleScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        // Navigate to add new invitation screen (implement route as needed)
-                        // navController.navigate("invitation_new")
+                        navController.navigate(Screen.WishListUpdateScreen.route)
                     },
                     shape = CircleShape,
                     containerColor = MaterialTheme.colorScheme.primary
@@ -348,8 +348,9 @@ fun ExampleScreen(
                                     }
                                 },
                                 onEditClick = {
-                                    // Navigate to edit wishlist screen
-                                    // navController.navigate("wishlist_edit/${wishlistItem.id}")
+                                     navController.navigate(
+                                         Screen.WishListUpdateScreen.route + "?wishListId=${wishlistItem.id}"
+                                     )
                                 },
                                 onToggleHostedClick = {
                                     wishlistViewModel.onEvent(
