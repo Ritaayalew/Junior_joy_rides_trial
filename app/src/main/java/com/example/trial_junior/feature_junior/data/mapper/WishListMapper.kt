@@ -13,7 +13,8 @@ fun WishListItem.toLocalWishListItem(id: Int): LocalWishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -26,7 +27,8 @@ fun WishListItem.toRemoteWishListItem(): RemoteWishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -39,7 +41,8 @@ fun LocalWishListItem.toWishListItem(): WishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -52,7 +55,8 @@ fun LocalWishListItem.toRemoteWishListItem(): RemoteWishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -65,7 +69,8 @@ fun RemoteWishListItem.toWishListItem(): WishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = id
+        id = id ?: throw IllegalStateException("Remote wish list item missing ID: $this"),
+        userId = userId
     )
 }
 
@@ -79,7 +84,8 @@ fun RemoteWishListItem.toLocalWishListItem(): LocalWishListItem {
         specialRequests = specialRequests,
         imageUrl = imageUrl,
         upcoming = upcoming,
-        id = serverId
+        id = serverId,
+        userId = userId
     )
 }
 
@@ -96,7 +102,8 @@ fun List<WishListItem>.toLocalWishListItemList(ids: List<Int>): List<LocalWishLi
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = ids[index]
+            id = ids[index],
+            userId = item.userId
         )
     }
 }
@@ -111,7 +118,8 @@ fun List<WishListItem>.toRemoteWishListItemList(): List<RemoteWishListItem> {
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -126,7 +134,8 @@ fun List<LocalWishListItem>.toWishListItemListFromLocal(): List<WishListItem> {
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = item.userId
         )
     }
 }
@@ -141,7 +150,8 @@ fun List<LocalWishListItem>.toRemoteWishListItemListFromLocal(): List<RemoteWish
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -156,7 +166,8 @@ fun List<RemoteWishListItem>.toWishListItemListFromRemote(): List<WishListItem> 
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id ?: throw IllegalStateException("Remote wish list item missing ID: $item"),
+            userId = item.userId
         )
     }
 }
@@ -172,7 +183,8 @@ fun List<RemoteWishListItem>.toLocalWishListItemListFromRemote(): List<LocalWish
             specialRequests = item.specialRequests,
             imageUrl = item.imageUrl,
             upcoming = item.upcoming,
-            id = serverId
+            id = serverId,
+            userId = item.userId
         )
     }
 }

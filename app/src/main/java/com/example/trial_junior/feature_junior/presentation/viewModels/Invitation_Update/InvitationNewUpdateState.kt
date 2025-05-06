@@ -21,6 +21,7 @@ data class InvitationNewUpdateState(
         upcoming = true,
         guardianPhone = 0L,
         age = 0,
+        userId = 0, // Default value; server will set it
         id = null
     ),
     val isLoading: Boolean = true,

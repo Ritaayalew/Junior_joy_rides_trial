@@ -13,5 +13,6 @@ data class LocalBasicInterviewItem(
     val specialRequests: String,
     val upcoming: Boolean,
     @PrimaryKey
-    val id: Int
+    val id: Int,
+    val userId: Int?
 )

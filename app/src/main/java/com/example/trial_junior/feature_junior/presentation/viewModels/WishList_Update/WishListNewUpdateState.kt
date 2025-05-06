@@ -18,7 +18,8 @@ data class WishListNewUpdateState(
         specialRequests = "",
         imageUrl = "",
         upcoming = true,
-        id = null
+        id = null,
+        userId = 0   // Default value; server will assign the actual userId
     ),
     val isLoading: Boolean = true,
     val error: String? = null

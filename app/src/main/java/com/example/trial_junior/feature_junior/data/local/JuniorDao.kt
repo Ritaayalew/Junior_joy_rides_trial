@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.example.trial_junior.feature_junior.data.local.dto.LocalBasicInterviewItem
 import com.example.trial_junior.feature_junior.data.local.dto.LocalInvitationItem
 import com.example.trial_junior.feature_junior.data.local.dto.LocalSpecialInterviewItem
+import com.example.trial_junior.feature_junior.data.local.dto.LocalUserItem
 import com.example.trial_junior.feature_junior.data.local.dto.LocalWishListItem
 
 
@@ -81,4 +82,16 @@ interface WishListDao {
 
     @Delete
     suspend fun deleteWishListItem(item: LocalWishListItem)
+}
+
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM user WHERE id = :id")
+    suspend fun getUserById(id: Int): LocalUserItem?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: LocalUserItem)
+
+    @Query("DELETE FROM user WHERE id = :id")
+    suspend fun deleteUser(id: Int)
 }

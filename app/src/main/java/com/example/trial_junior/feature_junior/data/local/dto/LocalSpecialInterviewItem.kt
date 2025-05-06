@@ -14,5 +14,6 @@ data class LocalSpecialInterviewItem(
     val videoUrl: String,
     val upcoming: Boolean,
     @PrimaryKey
-    val id: Int
+    val id: Int,
+    val userId: Int?
 )

@@ -9,5 +9,6 @@ data class RemoteSpecialInterviewItem(
     val specialRequests: String,
     val videoUrl: String,
     val upcoming: Boolean,
-    val id: Int? = null
+    val id: Int? = null,
+    val userId: Int? = null
 )

@@ -14,7 +14,8 @@ fun SpecialInterviewItem.toLocalSpecialInterviewItem(id: Int): LocalSpecialInter
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -28,7 +29,8 @@ fun SpecialInterviewItem.toRemoteSpecialInterviewItem(): RemoteSpecialInterviewI
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -42,7 +44,8 @@ fun LocalSpecialInterviewItem.toSpecialInterviewItem(): SpecialInterviewItem {
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -56,7 +59,8 @@ fun LocalSpecialInterviewItem.toRemoteSpecialInterviewItem(): RemoteSpecialInter
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -70,7 +74,8 @@ fun RemoteSpecialInterviewItem.toSpecialInterviewItem(): SpecialInterviewItem {
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = id
+        id = id ?: throw IllegalStateException("Remote special interview missing ID: $this"),
+        userId = userId
     )
 }
 
@@ -85,7 +90,8 @@ fun RemoteSpecialInterviewItem.toLocalSpecialInterviewItem(): LocalSpecialInterv
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
-        id = serverId
+        id = serverId,
+        userId = userId
     )
 }
 
@@ -103,7 +109,8 @@ fun List<SpecialInterviewItem>.toLocalSpecialInterviewItemList(ids: List<Int>): 
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = ids[index]
+            id = ids[index],
+            userId = item.userId
         )
     }
 }
@@ -119,7 +126,8 @@ fun List<SpecialInterviewItem>.toRemoteSpecialInterviewItemList(): List<RemoteSp
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -135,7 +143,8 @@ fun List<LocalSpecialInterviewItem>.toSpecialInterviewItemListFromLocal(): List<
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = item.userId
         )
     }
 }
@@ -151,7 +160,8 @@ fun List<LocalSpecialInterviewItem>.toRemoteSpecialInterviewItemListFromLocal():
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -167,7 +177,8 @@ fun List<RemoteSpecialInterviewItem>.toSpecialInterviewItemListFromRemote(): Lis
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id ?: throw IllegalStateException("Remote special interview missing ID: $item"),
+            userId = item.userId
         )
     }
 }
@@ -184,7 +195,8 @@ fun List<RemoteSpecialInterviewItem>.toLocalSpecialInterviewItemListFromRemote()
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
-            id = serverId
+            id = serverId,
+            userId = item.userId
         )
     }
 }

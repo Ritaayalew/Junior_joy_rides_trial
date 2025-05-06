@@ -68,10 +68,11 @@ class SpecialInterviewListRepoImpl(
     override suspend fun addSpecialInterviewItem(item: SpecialInterviewItem) {
         val remoteResponse = api.addSpecialInterview(item.toRemoteSpecialInterviewItem())
         if (remoteResponse.isSuccessful) {
-            val remoteItem = remoteResponse.body()
-            if (remoteItem != null) {
-                val serverId = remoteItem.id ?: throw Exception("Server returned a null ID")
-                val localItem = item.toLocalSpecialInterviewItem(serverId)
+            val createdItem = remoteResponse.body()
+            if (createdItem != null) {
+                val serverId = createdItem.id ?: throw Exception("Server returned a null ID")
+                val userId = createdItem.userId ?: throw Exception("Server returned a null userId")
+                val localItem = item.copy(id = serverId, userId = userId).toLocalSpecialInterviewItem(serverId)
                 dao.addSpecialInterviewItem(localItem)
             } else {
                 throw Exception("Failed to get created item from server")
@@ -88,7 +89,7 @@ class SpecialInterviewListRepoImpl(
     }
 
     override suspend fun deleteSpecialInterviewItem(item: SpecialInterviewItem) {
-        val itemId = item.id ?: throw IllegalArgumentException("Cannot update a special interview without an ID")
+        val itemId = item.id ?: throw IllegalArgumentException("Cannot delete a special interview without an ID")
         dao.deleteSpecialInterviewItem(item.toLocalSpecialInterviewItem(itemId))
         try {
             val response = api.deleteSpecialInterview(itemId)

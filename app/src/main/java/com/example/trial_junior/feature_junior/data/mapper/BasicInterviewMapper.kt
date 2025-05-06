@@ -4,7 +4,6 @@ import com.example.trial_junior.feature_junior.data.local.dto.LocalBasicIntervie
 import com.example.trial_junior.feature_junior.data.remote.dto.RemoteBasicInterviewItem
 import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem
 
-
 fun BasicInterviewItem.toLocalBasicInterviewItem(id: Int): LocalBasicInterviewItem {
     return LocalBasicInterviewItem(
         childName = childName,
@@ -14,7 +13,8 @@ fun BasicInterviewItem.toLocalBasicInterviewItem(id: Int): LocalBasicInterviewIt
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -27,7 +27,8 @@ fun BasicInterviewItem.toRemoteBasicInterviewItem(): RemoteBasicInterviewItem {
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -40,7 +41,8 @@ fun LocalBasicInterviewItem.toBasicInterviewItem(): BasicInterviewItem {
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = userId
     )
 }
 
@@ -53,7 +55,8 @@ fun LocalBasicInterviewItem.toRemoteBasicInterviewItem(): RemoteBasicInterviewIt
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = id
+        id = id,
+        userId = null // userId is set by the server, not sent in the request
     )
 }
 
@@ -66,7 +69,8 @@ fun RemoteBasicInterviewItem.toBasicInterviewItem(): BasicInterviewItem {
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = id
+        id = id ?: throw IllegalStateException("Remote basic interview missing ID: $this"),
+        userId = userId
     )
 }
 
@@ -80,7 +84,8 @@ fun RemoteBasicInterviewItem.toLocalBasicInterviewItem(): LocalBasicInterviewIte
         guardianEmail = guardianEmail,
         specialRequests = specialRequests,
         upcoming = upcoming,
-        id = serverId
+        id = serverId,
+        userId = userId
     )
 }
 
@@ -97,7 +102,8 @@ fun List<BasicInterviewItem>.toLocalBasicInterviewItemList(ids: List<Int>): List
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = ids[index]
+            id = ids[index],
+            userId = item.userId
         )
     }
 }
@@ -112,7 +118,8 @@ fun List<BasicInterviewItem>.toRemoteBasicInterviewItemList(): List<RemoteBasicI
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -127,7 +134,8 @@ fun List<LocalBasicInterviewItem>.toBasicInterviewItemListFromLocal(): List<Basi
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = item.userId
         )
     }
 }
@@ -142,7 +150,8 @@ fun List<LocalBasicInterviewItem>.toRemoteBasicInterviewItemListFromLocal(): Lis
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id,
+            userId = null // userId is set by the server, not sent in the request
         )
     }
 }
@@ -157,7 +166,8 @@ fun List<RemoteBasicInterviewItem>.toBasicInterviewItemListFromRemote(): List<Ba
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = item.id
+            id = item.id ?: throw IllegalStateException("Remote basic interview missing ID: $item"),
+            userId = item.userId
         )
     }
 }
@@ -173,7 +183,8 @@ fun List<RemoteBasicInterviewItem>.toLocalBasicInterviewItemListFromRemote(): Li
             guardianEmail = item.guardianEmail,
             specialRequests = item.specialRequests,
             upcoming = item.upcoming,
-            id = serverId
+            id = serverId,
+            userId = item.userId
         )
     }
 }
