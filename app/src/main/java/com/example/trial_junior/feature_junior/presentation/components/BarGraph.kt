@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.sp
 fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-
-    // Define the labels for the days of the week
     val dayLabels = listOf("M", "T", "W", "T", "F", "S", "S") // Adjust if your data list size is different
 
     Card(
