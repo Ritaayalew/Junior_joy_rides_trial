@@ -10,6 +10,6 @@ data class RemoteInvitationItem(
     val upcoming: Boolean,
     val guardianPhone: Long,
     val age: Int,
-    val id: Int?=null    // Optional for POST, present in response since the remote db (mysql) auto generates it
-
+    val userId: Int? = null,
+    val id: Int? = null
 )

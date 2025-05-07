@@ -183,7 +183,8 @@ fun InvitationItemCardPreview() {
                 date = "2025-03-27",
                 guardianPhone = 988984673,
                 age = 3,
-                id = 1
+                id = 1,
+                userId = 2
             ),
             onDeleteClick = {},
             onEditClick = {},

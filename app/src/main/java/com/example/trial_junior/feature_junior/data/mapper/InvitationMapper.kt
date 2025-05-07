@@ -4,7 +4,6 @@ import com.example.trial_junior.feature_junior.data.local.dto.LocalInvitationIte
 import com.example.trial_junior.feature_junior.data.remote.dto.RemoteInvitationItem
 import com.example.trial_junior.feature_junior.domain.model.InvitationItem
 
-// InvitationItem to LocalInvitationItem: Requires id parameter to ensure non-null
 fun InvitationItem.toLocalInvitationItem(id: Int): LocalInvitationItem {
     return LocalInvitationItem(
         childName = childName,
@@ -16,11 +15,11 @@ fun InvitationItem.toLocalInvitationItem(id: Int): LocalInvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
+        userId = userId,
         id = id
     )
 }
 
-// InvitationItem to RemoteInvitationItem: Can use the nullable id directly
 fun InvitationItem.toRemoteInvitationItem(): RemoteInvitationItem {
     return RemoteInvitationItem(
         childName = childName,
@@ -32,11 +31,11 @@ fun InvitationItem.toRemoteInvitationItem(): RemoteInvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
-        id = id // Nullable, as RemoteInvitationItem expects Int?
+        userId = null, // Not sent in request; server sets it
+        id = id
     )
 }
 
-// LocalInvitationItem to InvitationItem: id is non-null, can be used directly
 fun LocalInvitationItem.toInvitationItem(): InvitationItem {
     return InvitationItem(
         childName = childName,
@@ -48,11 +47,11 @@ fun LocalInvitationItem.toInvitationItem(): InvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
-        id = id // id is Int, compatible with Int?
+        userId = userId,
+        id = id
     )
 }
 
-// LocalInvitationItem to RemoteInvitationItem: id is non-null, can be used directly
 fun LocalInvitationItem.toRemoteInvitationItem(): RemoteInvitationItem {
     return RemoteInvitationItem(
         childName = childName,
@@ -64,11 +63,11 @@ fun LocalInvitationItem.toRemoteInvitationItem(): RemoteInvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
-        id = id // id is Int, compatible with Int?
+        userId = userId,
+        id = id
     )
 }
 
-// RemoteInvitationItem to InvitationItem: id is nullable, can be used directly
 fun RemoteInvitationItem.toInvitationItem(): InvitationItem {
     return InvitationItem(
         childName = childName,
@@ -80,13 +79,14 @@ fun RemoteInvitationItem.toInvitationItem(): InvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
-        id = id // Both are Int?
+        userId = userId ?: throw IllegalStateException("userId is null in RemoteInvitationItem"),
+        id = id
     )
 }
 
-// RemoteInvitationItem to LocalInvitationItem: Use id directly with null-check
 fun RemoteInvitationItem.toLocalInvitationItem(): LocalInvitationItem {
     val serverId = id ?: throw IllegalStateException("Remote invitation missing ID: $this")
+    val userId = userId ?: throw IllegalStateException("Remote invitation missing userId: $this")
     return LocalInvitationItem(
         childName = childName,
         guardianEmail = guardianEmail,
@@ -97,117 +97,119 @@ fun RemoteInvitationItem.toLocalInvitationItem(): LocalInvitationItem {
         upcoming = upcoming,
         guardianPhone = guardianPhone,
         age = age,
+        userId = userId,
         id = serverId
     )
 }
 
-// List<InvitationItem> to List<LocalInvitationItem>: Requires ids to be passed
 fun List<InvitationItem>.toLocalInvitationItemList(ids: List<Int>): List<LocalInvitationItem> {
     if (this.size != ids.size) {
         throw IllegalArgumentException("The number of items (${this.size}) must match the number of IDs (${ids.size})")
     }
-    return this.mapIndexed { index, invitation ->
+    return this.mapIndexed { index, item ->
         LocalInvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = item.userId,
             id = ids[index]
         )
     }
 }
 
-// List<InvitationItem> to List<RemoteInvitationItem>: Can use nullable ids directly
 fun List<InvitationItem>.toRemoteInvitationItemList(): List<RemoteInvitationItem> {
-    return this.map { invitation ->
+    return this.map { item ->
         RemoteInvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
-            id = invitation.id
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = null, // Not sent in request; server sets it
+            id = item.id
         )
     }
 }
 
-// године List<LocalInvitationItem> to List<InvitationItem>: ids are non-null
 fun List<LocalInvitationItem>.toInvitationItemListFromLocal(): List<InvitationItem> {
-    return this.map { invitation ->
+    return this.map { item ->
         InvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
-            id = invitation.id
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = item.userId,
+            id = item.id
         )
     }
 }
 
-// List<LocalInvitationItem> to List<RemoteInvitationItem>: ids are non-null
 fun List<LocalInvitationItem>.toRemoteInvitationItemListFromLocal(): List<RemoteInvitationItem> {
-    return this.map { invitation ->
+    return this.map { item ->
         RemoteInvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
-            id = invitation.id
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = item.userId,
+            id = item.id
         )
     }
 }
 
-// List<RemoteInvitationItem> to List<InvitationItem>: ids are nullable
 fun List<RemoteInvitationItem>.toInvitationItemListFromRemote(): List<InvitationItem> {
-    return this.map { invitation ->
+    return this.map { item ->
         InvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
-            id = invitation.id
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = item.userId ?: throw IllegalStateException("userId is null in RemoteInvitationItem"),
+            id = item.id
         )
     }
 }
 
-// List<RemoteInvitationItem> to List<LocalInvitationItem>: Use id directly with null-check
 fun List<RemoteInvitationItem>.toLocalInvitationItemListFromRemote(): List<LocalInvitationItem> {
-    return this.map { invitation ->
-        val serverId = invitation.id ?: throw IllegalStateException("Remote invitation missing ID: $invitation")
+    return this.map { item ->
+        val serverId = item.id ?: throw IllegalStateException("Remote invitation missing ID: $item")
+        val userId = item.userId ?: throw IllegalStateException("Remote invitation missing userId: $item")
         LocalInvitationItem(
-            childName = invitation.childName,
-            guardianEmail = invitation.guardianEmail,
-            specialRequests = invitation.specialRequests,
-            address = invitation.address,
-            date = invitation.date,
-            time = invitation.time,
-            upcoming = invitation.upcoming,
-            guardianPhone = invitation.guardianPhone,
-            age = invitation.age,
+            childName = item.childName,
+            guardianEmail = item.guardianEmail,
+            specialRequests = item.specialRequests,
+            address = item.address,
+            date = item.date,
+            time = item.time,
+            upcoming = item.upcoming,
+            guardianPhone = item.guardianPhone,
+            age = item.age,
+            userId = userId,
             id = serverId
         )
     }

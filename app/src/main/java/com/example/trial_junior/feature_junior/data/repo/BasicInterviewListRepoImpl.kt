@@ -68,10 +68,11 @@ class BasicInterviewListRepoImpl(
     override suspend fun addBasicInterviewItem(item: BasicInterviewItem) {
         val remoteResponse = api.addBasicInterview(item.toRemoteBasicInterviewItem())
         if (remoteResponse.isSuccessful) {
-            val remoteItem = remoteResponse.body()
-            if (remoteItem != null) {
-                val serverId = remoteItem.id ?: throw Exception("Server returned a null ID")
-                val localItem = item.toLocalBasicInterviewItem(serverId)
+            val createdItem = remoteResponse.body()
+            if (createdItem != null) {
+                val serverId = createdItem.id ?: throw Exception("Server returned a null ID")
+                val userId = createdItem.userId ?: throw Exception("Server returned a null userId")
+                val localItem = item.copy(id = serverId, userId = userId).toLocalBasicInterviewItem(serverId)
                 dao.addBasicInterviewItem(localItem)
             } else {
                 throw Exception("Failed to get created item from server")
@@ -88,7 +89,7 @@ class BasicInterviewListRepoImpl(
     }
 
     override suspend fun deleteBasicInterviewItem(item: BasicInterviewItem) {
-        val itemId = item.id ?: throw IllegalArgumentException("Cannot update a basic interview without an ID")
+        val itemId = item.id ?: throw IllegalArgumentException("Cannot delete a basic interview without an ID")
         dao.deleteBasicInterviewItem(item.toLocalBasicInterviewItem(itemId))
         try {
             val response = api.deleteBasicInterview(itemId)

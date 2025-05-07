@@ -3,7 +3,6 @@ package com.example.trial_junior.feature_junior.data.local.dto
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
 @Entity(tableName = "invitation")
 data class LocalInvitationItem(
     val childName: String,
@@ -15,7 +14,7 @@ data class LocalInvitationItem(
     val upcoming: Boolean,
     val guardianPhone: Long,
     val age: Int,
+    val userId: Int,
     @PrimaryKey
     val id: Int
-
 )

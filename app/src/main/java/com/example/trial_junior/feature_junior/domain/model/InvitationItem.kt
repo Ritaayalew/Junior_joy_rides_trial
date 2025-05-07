@@ -31,5 +31,6 @@ data class InvitationItem(
     override val upcoming: Boolean,
     val guardianPhone: Long,
     val age: Int,
+    val userId: Int,
     override val id: Int? = null
 ) : ListItem

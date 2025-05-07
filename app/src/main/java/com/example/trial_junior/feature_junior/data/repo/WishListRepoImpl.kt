@@ -68,10 +68,11 @@ class WishListRepoImpl(
     override suspend fun addWishListItem(item: WishListItem) {
         val remoteResponse = api.addWishListItem(item.toRemoteWishListItem())
         if (remoteResponse.isSuccessful) {
-            val remoteItem = remoteResponse.body()
-            if (remoteItem != null) {
-                val serverId = remoteItem.id ?: throw Exception("Server returned a null ID")
-                val localItem = item.toLocalWishListItem(serverId)
+            val createdItem = remoteResponse.body()
+            if (createdItem != null) {
+                val serverId = createdItem.id ?: throw Exception("Server returned a null ID")
+                val userId = createdItem.userId ?: throw Exception("Server returned a null userId")
+                val localItem = item.copy(id = serverId, userId = userId).toLocalWishListItem(serverId)
                 dao.addWishListItem(localItem)
             } else {
                 throw Exception("Failed to get created item from server")
@@ -88,7 +89,7 @@ class WishListRepoImpl(
     }
 
     override suspend fun deleteWishListItem(item: WishListItem) {
-        val itemId = item.id ?: throw IllegalArgumentException("Cannot update a wish list item without an ID")
+        val itemId = item.id ?: throw IllegalArgumentException("Cannot delete a wish list item without an ID")
         dao.deleteWishListItem(item.toLocalWishListItem(itemId))
         try {
             val response = api.deleteWishListItem(itemId)
