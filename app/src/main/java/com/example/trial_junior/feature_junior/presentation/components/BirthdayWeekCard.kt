@@ -178,7 +178,7 @@ fun ImageCardNavigator(images: List<Int>) { // Accept list of image resources as
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Show previous button only if there are images before the current pair
+
                 if (currentIndex > 0) {
                     Button(
                         onClick = { currentIndex -= 2 },
