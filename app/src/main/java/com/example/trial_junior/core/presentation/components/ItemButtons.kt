@@ -8,7 +8,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -74,7 +76,7 @@ fun EditButton(
         modifier = modifier
     ) {
         Icon(
-            imageVector = Icons.Default.Edit,
+            imageVector = Icons.Default.FolderOpen,
             contentDescription = ContentDescriptions.UPDATE_ITEM,
             tint = color,
             modifier = Modifier.size(32.dp)
@@ -92,7 +94,7 @@ fun DeleteButton(
         modifier = modifier
     ) {
         Icon(
-            imageVector = Icons.Default.Delete,
+            imageVector = Icons.Default.DeleteOutline,
             contentDescription = ContentDescriptions.DELETE_ITEM,
             tint = MaterialTheme.colorScheme.error,
             modifier = Modifier.size(32.dp)

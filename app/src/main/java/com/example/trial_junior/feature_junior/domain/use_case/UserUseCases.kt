@@ -16,6 +16,22 @@ data class UserUseCases @Inject constructor(
     suspend fun getMyProfile(): UserItem =
         repository.getMyProfile()
 
-    suspend fun updateProfile(email: String, firstName: String?, lastName: String?, newEmail: String?, password: String?): UserItem =
-        repository.updateProfile(email, firstName, lastName, newEmail, password)
-}
+    suspend fun updateProfile(
+        email: String,
+        firstName: String?,
+        lastName: String?,
+        newEmail: String?,
+        password: String?,
+        profileImageUrl: String?,
+        backgroundImageUrl: String?
+    ): UserItem {
+        return repository.updateProfile(
+            email,
+            firstName,
+            lastName,
+            newEmail,
+            password,
+            profileImageUrl,
+            backgroundImageUrl
+        )
+    }}

@@ -8,6 +8,7 @@ data class RemoteBasicInterviewItem(
     val guardianEmail: String,
     val specialRequests: String,
     val upcoming: Boolean,
+    val approved: Boolean,
     val id: Int? = null,
     val userId: Int? = null
 )

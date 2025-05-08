@@ -14,6 +14,7 @@ fun SpecialInterviewItem.toLocalSpecialInterviewItem(id: Int): LocalSpecialInter
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = id,
         userId = userId
     )
@@ -29,6 +30,7 @@ fun SpecialInterviewItem.toRemoteSpecialInterviewItem(): RemoteSpecialInterviewI
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = id,
         userId = null // userId is set by the server, not sent in the request
     )
@@ -44,6 +46,7 @@ fun LocalSpecialInterviewItem.toSpecialInterviewItem(): SpecialInterviewItem {
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = id,
         userId = userId
     )
@@ -59,6 +62,7 @@ fun LocalSpecialInterviewItem.toRemoteSpecialInterviewItem(): RemoteSpecialInter
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = id,
         userId = null // userId is set by the server, not sent in the request
     )
@@ -74,6 +78,7 @@ fun RemoteSpecialInterviewItem.toSpecialInterviewItem(): SpecialInterviewItem {
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = id ?: throw IllegalStateException("Remote special interview missing ID: $this"),
         userId = userId
     )
@@ -90,6 +95,7 @@ fun RemoteSpecialInterviewItem.toLocalSpecialInterviewItem(): LocalSpecialInterv
         specialRequests = specialRequests,
         videoUrl = videoUrl,
         upcoming = upcoming,
+        approved = approved,
         id = serverId,
         userId = userId
     )
@@ -109,6 +115,7 @@ fun List<SpecialInterviewItem>.toLocalSpecialInterviewItemList(ids: List<Int>): 
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = ids[index],
             userId = item.userId
         )
@@ -126,6 +133,7 @@ fun List<SpecialInterviewItem>.toRemoteSpecialInterviewItemList(): List<RemoteSp
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = item.id,
             userId = null // userId is set by the server, not sent in the request
         )
@@ -143,6 +151,7 @@ fun List<LocalSpecialInterviewItem>.toSpecialInterviewItemListFromLocal(): List<
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = item.id,
             userId = item.userId
         )
@@ -160,6 +169,7 @@ fun List<LocalSpecialInterviewItem>.toRemoteSpecialInterviewItemListFromLocal():
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = item.id,
             userId = null // userId is set by the server, not sent in the request
         )
@@ -177,6 +187,7 @@ fun List<RemoteSpecialInterviewItem>.toSpecialInterviewItemListFromRemote(): Lis
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = item.id ?: throw IllegalStateException("Remote special interview missing ID: $item"),
             userId = item.userId
         )
@@ -195,6 +206,7 @@ fun List<RemoteSpecialInterviewItem>.toLocalSpecialInterviewItemListFromRemote()
             specialRequests = item.specialRequests,
             videoUrl = item.videoUrl,
             upcoming = item.upcoming,
+            approved = item.approved,
             id = serverId,
             userId = item.userId
         )

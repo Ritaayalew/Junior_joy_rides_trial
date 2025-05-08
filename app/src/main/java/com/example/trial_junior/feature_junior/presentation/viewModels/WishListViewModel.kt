@@ -26,7 +26,7 @@ class WishListViewModel @Inject constructor(
 
     override suspend fun fetchItems(): ListUseCaseResult<WishListItem> {
         return try {
-            when (val result = useCases.getWishListItems(showHosted = true)) {
+            when (val result = useCases.getWishListItems(showHosted = true, showApproved = true)) {
                 is WishListUseCaseResult.Success -> ListUseCaseResult.Success(result.items)
                 is WishListUseCaseResult.Error -> ListUseCaseResult.Error(result.message)
             }
@@ -47,6 +47,10 @@ class WishListViewModel @Inject constructor(
         useCases.toggleHostedWishListItem(item)
     }
 
+    override suspend fun toggleApproved(item: WishListItem) {
+        useCases.toggleApprovedWishListItem(item)
+    }
+
     fun onEvent(event: WishListEvent) {
         eventJob?.cancel() // Cancel any ongoing event operation
 
@@ -65,6 +69,9 @@ class WishListViewModel @Inject constructor(
                 is WishListEvent.ToggleHosted -> {
                     super@WishListViewModel.onEvent(ListEvent.ToggleHosted(event.item))
                 }
+                is WishListEvent.ToggleApproved -> {
+                    super@WishListViewModel.onEvent(ListEvent.ToggleApproved(event.item))
+                }
             }
         }
     }
@@ -74,4 +81,5 @@ sealed class WishListEvent {
     data class Delete(val item: WishListItem) : WishListEvent()
     data class UndoDelete(val item: WishListItem) : WishListEvent()
     data class ToggleHosted(val item: WishListItem) : WishListEvent()
+    data class ToggleApproved(val item: WishListItem) : WishListEvent()
 }

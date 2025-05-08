@@ -13,7 +13,9 @@ fun UserItem.toLocalUserItem(id: Int): LocalUserItem {
         email = email,
         password = "", // Not storing password
         salt = "",
-        role = role
+        role = role,
+        profileImageUrl = profileImageUrl,
+        backgroundImageUrl = backgroundImageUrl
     )
 }
 
@@ -24,6 +26,8 @@ fun RemoteUserItem.toUserItem(): UserItem {
         lastName = lastName,
         email = email,
         role = role,
+        profileImageUrl = profileImageUrl,
+        backgroundImageUrl = backgroundImageUrl,
         invitations = invitations?.map { it.toInvitationItem() } ?: emptyList(),
         basicInterviews = basicInterviews?.map { it.toBasicInterviewItem() } ?: emptyList(),
         specialInterviews = specialInterviews?.map { it.toSpecialInterviewItem() } ?: emptyList(),
@@ -38,6 +42,8 @@ fun LocalUserItem.toUserItem(): UserItem {
         lastName = lastName,
         email = email,
         role = role,
+        profileImageUrl = profileImageUrl,
+        backgroundImageUrl = backgroundImageUrl,
         invitations = emptyList(), // Relations not stored locally
         basicInterviews = emptyList(),
         specialInterviews = emptyList(),

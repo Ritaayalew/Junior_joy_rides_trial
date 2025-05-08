@@ -12,6 +12,7 @@ data class LocalBasicInterviewItem(
     val guardianEmail: String,
     val specialRequests: String,
     val upcoming: Boolean,
+    val approved: Boolean,
     @PrimaryKey
     val id: Int,
     val userId: Int?

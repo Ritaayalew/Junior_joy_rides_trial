@@ -197,4 +197,7 @@ dependencies {
 
     //logging
     implementation(libs.okhttp.logging.interceptor)  // Added for Retrofit logging
+
+    //image rendering using coil
+    implementation (libs.coil.compose)
 }

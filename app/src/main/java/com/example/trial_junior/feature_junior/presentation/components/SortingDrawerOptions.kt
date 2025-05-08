@@ -26,7 +26,7 @@ fun SortingDrawerOptions(
         },
         selected = false,
         onClick = {
-            onOrderChange(InvitationItemOrder.Time(invitationItemOrder.sortingDirection, invitationItemOrder.showHosted))
+            onOrderChange(InvitationItemOrder.Time(invitationItemOrder.sortingDirection, invitationItemOrder.showHosted, invitationItemOrder.showApproved))
         }
     )
 
@@ -42,7 +42,7 @@ fun SortingDrawerOptions(
         },
         selected = false,
         onClick = {
-            onOrderChange(invitationItemOrder.copy(SortingDirection.Down, invitationItemOrder.showHosted))
+            onOrderChange(invitationItemOrder.copy(SortingDirection.Down, invitationItemOrder.showHosted, invitationItemOrder.showApproved))
         }
     )
 
@@ -56,7 +56,7 @@ fun SortingDrawerOptions(
         },
         selected = false,
         onClick = {
-            onOrderChange(invitationItemOrder.copy(SortingDirection.Up, invitationItemOrder.showHosted))
+            onOrderChange(invitationItemOrder.copy(SortingDirection.Up, invitationItemOrder.showHosted, invitationItemOrder.showApproved))
         }
     )
 
@@ -65,8 +65,22 @@ fun SortingDrawerOptions(
     NavigationDrawerItem(
         label = {
             IconRow(text = ListStrings.SHOW_CELEBRATED, isChecked = invitationItemOrder.showHosted)
-        }, selected = false,
+        },
+        selected = false,
         onClick = {
-            onOrderChange(invitationItemOrder.copy(invitationItemOrder.sortingDirection, !invitationItemOrder.showHosted))
-        })
+            onOrderChange(invitationItemOrder.copy(invitationItemOrder.sortingDirection, !invitationItemOrder.showHosted, invitationItemOrder.showApproved))
+        }
+    )
+
+    Divider()
+
+    NavigationDrawerItem(
+        label = {
+            IconRow(text = ListStrings.SHOW_APPROVED, isChecked = invitationItemOrder.showApproved)
+        },
+        selected = false,
+        onClick = {
+            onOrderChange(invitationItemOrder.copy(invitationItemOrder.sortingDirection, invitationItemOrder.showHosted, !invitationItemOrder.showApproved))
+        }
+    )
 }

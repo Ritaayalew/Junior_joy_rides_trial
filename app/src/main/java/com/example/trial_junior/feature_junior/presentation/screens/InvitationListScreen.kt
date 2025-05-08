@@ -23,10 +23,14 @@ import androidx.navigation.NavController
 import com.example.trial_junior.core.util.ContentDescriptions
 import com.example.trial_junior.core.util.ListStrings
 import com.example.trial_junior.feature_junior.presentation.components.BasicInterviewItemCard
+import com.example.trial_junior.feature_junior.presentation.components.BasicInterviewItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCard
+import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.components.SortingDrawerOptions
 import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCard
+import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCard
+import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
@@ -160,7 +164,7 @@ fun ExampleScreen(
                             .padding(horizontal = 12.dp)
                     ) {
                         items(basicInterviewState.items) { basicInterview ->
-                            BasicInterviewItemCard(
+                            BasicInterviewItemCardAdmin(
                                 basicInterview = basicInterview,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -215,7 +219,7 @@ fun ExampleScreen(
                             .padding(horizontal = 12.dp)
                     ) {
                         items(specialInterviewState.items) { specialInterview ->
-                            SpecialInterviewItemCard(
+                            SpecialInterviewItemCardAdmin(
                                 specialInterview = specialInterview,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -270,7 +274,7 @@ fun ExampleScreen(
                             .padding(horizontal = 12.dp)
                     ) {
                         items(invitationState.items) { invitation ->
-                            InvitationItemCard(
+                            InvitationItemCardAdmin(
                                 invitation = invitation,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -325,7 +329,7 @@ fun ExampleScreen(
                             .padding(horizontal = 12.dp)
                     ) {
                         items(wishlistState.items) { wishlistItem ->
-                            WishlistItemCard(
+                            WishlistItemCardAdmin(
                                 wishlistItem = wishlistItem,
                                 modifier = Modifier
                                     .fillMaxWidth()

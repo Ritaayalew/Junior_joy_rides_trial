@@ -10,6 +10,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Interests
+import androidx.compose.material.icons.filled.YoutubeSearchedFor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -97,13 +101,13 @@ fun MenuBody(
         ) {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon), // Ensure this drawable exists
+                    imageVector = Icons.Default.YoutubeSearchedFor,// Ensure this drawable exists
                     contentDescription = "YouTube"
                 )
             }
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon), // Ensure this drawable exists
+                    imageVector = Icons.Default.Interests, // Ensure this drawable exists
                     contentDescription = "Instagram"
                 )
             }

@@ -32,6 +32,7 @@ abstract class ListViewModel<T : ListItem>  constructor(
 
     abstract suspend fun fetchItems(): ListUseCaseResult<T>
     abstract suspend fun toggleHosted(item: T)
+    abstract suspend fun toggleApproved(item: T)
 
     fun getItems() {
         getItemsJob?.cancel() // Cancel any ongoing fetch operation
@@ -78,6 +79,12 @@ abstract class ListViewModel<T : ListItem>  constructor(
                     getItems()
                 }
             }
+            is ListEvent.ToggleApproved -> {
+                viewModelScope.launch(dispatcher + errorHandler) {
+                    toggleApproved(event.item)
+                    getItems()
+                }
+            }
         }
     }
 
@@ -95,6 +102,7 @@ sealed class ListEvent<T : ListItem> {
     data class DeleteItem<T : ListItem>(val item: T) : ListEvent<T>()
     data class RestoreItem<T : ListItem>(val item: T) : ListEvent<T>()
     data class ToggleHosted<T : ListItem>(val item: T) : ListEvent<T>()
+    data class ToggleApproved<T : ListItem>(val item: T) : ListEvent<T>()
 }
 
 sealed class ListUseCaseResult<T : ListItem> {

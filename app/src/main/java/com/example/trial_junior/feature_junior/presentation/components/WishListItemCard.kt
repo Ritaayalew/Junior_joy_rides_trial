@@ -1,6 +1,7 @@
 package com.example.trial_junior.feature_junior.presentation.components
 
-
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +22,6 @@ import com.example.trial_junior.core.presentation.components.HostedButton
 import com.example.trial_junior.feature_junior.domain.model.WishListItem
 import com.example.trial_junior.ui.theme.TrialJuniorTheme
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WishlistItemCard(
@@ -30,14 +29,13 @@ fun WishlistItemCard(
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
-    onToggleHostedClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -84,18 +82,20 @@ fun WishlistItemCard(
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
+                            fontSize = 15.sp
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = if (wishlistItem.upcoming) Color(0xFFE4851C) else Color(0xFF4CAF50),
                         labelColor = Color.White
                     ),
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    border = BorderStroke(1.dp, Color.White)
                 )
             }
             Text(
-                text = "Date: ${wishlistItem.date}",
+                text = "Birth Day: ${wishlistItem.date}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
@@ -130,23 +130,42 @@ fun WishlistItemCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                HostedButton(
-                    onToggleHostedClick = onToggleHostedClick,
-                    color = MaterialTheme.colorScheme.secondary,
-                    upcoming = wishlistItem.upcoming,
-                    modifier = Modifier.size(48.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable(onClick = onEditClick)
+                        .padding(4.dp)
+                ) {
+                    EditButton(
+                        onEditClick = onEditClick,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Text(
+                        text = "Edit",
+                        color = Color.Black,
+                        fontSize = 17.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
-                EditButton(
-                    onEditClick = onEditClick,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                DeleteButton(
-                    onDeleteClick = onDeleteClick,
-                    modifier = Modifier.size(32.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable(onClick = onDeleteClick)
+                        .padding(4.dp)
+                ) {
+                    DeleteButton(
+                        onDeleteClick = onDeleteClick,
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Text(
+                        text = "Cancel",
+                        color = Color.Red,
+                        fontSize = 17.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -160,7 +179,8 @@ fun WishlistItemCardPreview() {
             wishlistItem = WishListItem(
                 childName = "Meba",
                 guardianEmail = "rita@gmail.com",
-                upcoming = true, // Set to true to show "PENDING"
+                upcoming = true,
+                approved = true,
                 specialRequests = "Birthday celebration with the ethipis",
                 imageUrl = "https://www.youtube.com/watch?v=0wjnk62I01c&list=PPSV",
                 date = "2/21/2024",
@@ -168,8 +188,7 @@ fun WishlistItemCardPreview() {
                 id = 1
             ),
             onDeleteClick = {},
-            onEditClick = {} ,
-            onToggleHostedClick = {}
+            onEditClick = {},
         )
     }
 }

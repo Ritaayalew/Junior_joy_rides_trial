@@ -9,6 +9,7 @@ data class SpecialInterviewItem(
     val specialRequests: String,
     val videoUrl: String,
     override val upcoming: Boolean,
+    override val approved: Boolean,
     override val id: Int? = null,
     val userId: Int? = null
 ) : ListItem

@@ -1,5 +1,8 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -61,7 +64,9 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(Color.White)
+            .padding(bottom = 56.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -74,13 +79,13 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             ),
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(bottom = 5.dp),
+                .padding(top = 5.dp),
         )
         Divider(
             color = Color.Gray,
             thickness = 1.dp,
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(top = 8.dp)
                 .padding(0.dp)
         )
 
@@ -100,8 +105,13 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             onValueChange = { firstName = it },
             label = { Text("First name") },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "First name") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFDEDEDE))
+                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
+
+
         )
 
         OutlinedTextField(
@@ -109,8 +119,12 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             onValueChange = { lastName = it },
             label = { Text("Last Name") },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Last name") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFDEDEDE))
+                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
+
         )
 
         OutlinedTextField(
@@ -118,8 +132,12 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             onValueChange = { email = it },
             label = { Text("Email") },
             leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Email") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFDEDEDE))
+                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
+
         )
         OutlinedTextField(
             value = password,
@@ -135,7 +153,10 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
                 }
             },
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFDEDEDE))
+                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
         )
         OutlinedTextField(
             value = confirmPassword,
@@ -153,8 +174,12 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
                 }
             },
             visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFDEDEDE))
+                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
+
         )
 
         Row(
@@ -213,7 +238,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Already have an account? ")
-            TextButton(onClick = { navController.navigate(Screen.LoginScreen.route) }) {
+            TextButton( onClick = { navController.navigate(Screen.LoginScreen.route) }) {
                 Text(
                     text = "Signin",
                     color = Color(0xFFC5AE3D),

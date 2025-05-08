@@ -20,7 +20,7 @@ class InvitationListViewModel @Inject constructor(
 ) : ListViewModel<InvitationItem>(dispatcher) {
 
     private val _invitationItemOrder = mutableStateOf<InvitationItemOrder>(
-        InvitationItemOrder.Time(SortingDirection.Down, showHosted = true)
+        InvitationItemOrder.Time(SortingDirection.Down, showHosted = true, showApproved = true)
     )
     val invitationItemOrder: State<InvitationItemOrder> = _invitationItemOrder
 
@@ -53,6 +53,10 @@ class InvitationListViewModel @Inject constructor(
         invitationUseCases.toggleHostedInvitationItem(item)
     }
 
+    override suspend fun toggleApproved(item: InvitationItem) {
+        invitationUseCases.toggleApprovedInvitationItem(item)
+    }
+
     fun onEvent(event: InvitationListEvent) {
         when (event) {
             is InvitationListEvent.Sort -> {
@@ -78,6 +82,9 @@ class InvitationListViewModel @Inject constructor(
             is InvitationListEvent.ToggleHosted -> {
                 super.onEvent(ListEvent.ToggleHosted(event.invitation))
             }
+            is InvitationListEvent.ToggleApproved -> {
+                super.onEvent(ListEvent.ToggleHosted(event.invitation))
+            }
         }
     }
 }
@@ -87,4 +94,5 @@ sealed class InvitationListEvent {
     data class Delete(val invitation: InvitationItem) : InvitationListEvent()
     data class UndoDelete(val invitation: InvitationItem) : InvitationListEvent()
     data class ToggleHosted(val invitation: InvitationItem) : InvitationListEvent()
+    data class ToggleApproved(val invitation: InvitationItem) : InvitationListEvent()
 }

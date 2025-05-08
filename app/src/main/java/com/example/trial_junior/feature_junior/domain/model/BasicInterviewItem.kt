@@ -8,6 +8,7 @@ data class BasicInterviewItem(
     val guardianEmail: String,
     val specialRequests: String,
     override val upcoming: Boolean,
+    override val approved: Boolean,
     override val id: Int? = null,
     val userId: Int? = null
 ) : ListItem

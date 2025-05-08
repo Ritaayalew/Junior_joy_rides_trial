@@ -13,6 +13,7 @@ data class LocalSpecialInterviewItem(
     val specialRequests: String,
     val videoUrl: String,
     val upcoming: Boolean,
+    val approved: Boolean,
     @PrimaryKey
     val id: Int,
     val userId: Int?

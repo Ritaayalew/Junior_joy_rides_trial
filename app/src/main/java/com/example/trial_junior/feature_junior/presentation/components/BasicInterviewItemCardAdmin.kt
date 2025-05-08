@@ -24,18 +24,19 @@ import com.example.trial_junior.ui.theme.TrialJuniorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicInterviewItemCard(
+fun BasicInterviewItemCardAdmin(
     basicInterview: BasicInterviewItem,
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    onToggleHostedClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -59,7 +60,7 @@ fun BasicInterviewItemCard(
                         contentDescription = "Event Icon",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(28.dp)
                             .padding(end = 12.dp)
                     )
                     Column {
@@ -82,7 +83,7 @@ fun BasicInterviewItemCard(
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
+                            fontSize = 12.sp
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
@@ -92,7 +93,6 @@ fun BasicInterviewItemCard(
                     modifier = Modifier.padding(start = 8.dp),
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(1.dp, Color.White)
-
                 )
             }
             Text(
@@ -128,6 +128,13 @@ fun BasicInterviewItemCard(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                HostedButton(
+                    onToggleHostedClick = onToggleHostedClick,
+                    color = MaterialTheme.colorScheme.secondary,
+                    upcoming = basicInterview.upcoming,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -171,9 +178,9 @@ fun BasicInterviewItemCard(
 
 @Preview
 @Composable
-fun BasicInterviewItemCardPreview() {
+fun BasicInterviewItemCardAdminPreview() {
     TrialJuniorTheme {
-        BasicInterviewItemCard(
+        BasicInterviewItemCardAdmin(
             basicInterview = BasicInterviewItem(
                 childName = "Meba",
                 guardianName = "Freail",
@@ -186,7 +193,8 @@ fun BasicInterviewItemCardPreview() {
                 id = 1
             ),
             onDeleteClick = {},
-            onEditClick = {}
+            onEditClick = {},
+            onToggleHostedClick = {}
         )
     }
 }

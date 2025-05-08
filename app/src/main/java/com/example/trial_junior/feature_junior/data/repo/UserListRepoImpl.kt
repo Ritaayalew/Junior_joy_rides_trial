@@ -7,6 +7,7 @@ import com.example.trial_junior.feature_junior.data.di.IoDispatcher
 import com.example.trial_junior.feature_junior.data.mapper.toLocalUserItem
 import com.example.trial_junior.feature_junior.data.mapper.toUserItem
 import com.example.trial_junior.feature_junior.data.remote.dto.RegisterRequest
+import com.example.trial_junior.feature_junior.data.remote.dto.UpdateProfileRequest
 import com.example.trial_junior.feature_junior.domain.model.UserItem
 import com.example.trial_junior.feature_junior.domain.repo.UserListRepo
 import kotlinx.coroutines.CoroutineDispatcher
@@ -70,26 +71,41 @@ class UserListRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateProfile(email: String, firstName: String?, lastName: String?, newEmail: String?, password: String?): UserItem {
+    override suspend fun updateProfile(email: String, firstName: String?, lastName: String?, newEmail: String?, password: String?, profileImageUrl: String?, backgroundImageUrl: String?): UserItem {
         return withContext(dispatcher) {
-            val updateDTO = mutableMapOf<String, Any>()
-            firstName?.let { updateDTO["firstName"] = it }
-            lastName?.let { updateDTO["lastName"] = it }
-            newEmail?.let { updateDTO["email"] = it }
-            password?.let {
-                updateDTO["password"] = it
-                updateDTO["salt"] = "" // Server will generate salt
-            }
+            val updateDTO = UpdateProfileRequest(
+                firstName = firstName,
+                lastName = lastName,
+                email = newEmail,
+                password = password,
+                salt = if (password != null) "" else null,
+                profileImageUrl = profileImageUrl,
+                backgroundImageUrl = backgroundImageUrl
+            )
             val response = api.updateProfile(updateDTO)
             if (response.isSuccessful) {
-                val user = response.body()?.toUserItem() ?: throw Exception("Update failed")
-                dao.insertUser(user.toLocalUserItem(user.id ?: 0))
-                if (newEmail != null) {
-                    tokenManager.clearToken()
+                val responseBody = response.body() ?: throw Exception("Update failed: No response body")
+                // Log the raw response body for debugging
+                println("Update response body: $responseBody")
+                // Attempt to extract token (optional, avoid exception if not present)
+                val newToken = responseBody["token"]
+                if (newToken != null) {
+                    tokenManager.saveToken(newToken) // Save the new token if provided
+                    println("New token saved: $newToken")
+                } else {
+                    println("No new token found in response")
                 }
-                user
+                // Fetch the updated user profile
+                val userResponse = api.getMyProfile()
+                if (userResponse != null) {
+                    val user = userResponse.toUserItem()
+                    dao.insertUser(user.toLocalUserItem(user.id ?: 0))
+                    user
+                } else {
+                    throw Exception("Failed to fetch updated user profile")
+                }
             } else {
-                throw Exception("Update failed: ${response.message()}")
+                throw Exception("Update failed: ${response.message()} (Code: ${response.code()})")
             }
         }
     }

@@ -6,6 +6,7 @@ import com.example.trial_junior.feature_junior.data.remote.dto.RemoteInvitationI
 import com.example.trial_junior.feature_junior.data.remote.dto.RemoteSpecialInterviewItem
 import com.example.trial_junior.feature_junior.data.remote.dto.RemoteUserItem
 import com.example.trial_junior.feature_junior.data.remote.dto.RemoteWishListItem
+import com.example.trial_junior.feature_junior.data.remote.dto.UpdateProfileRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -97,5 +98,5 @@ interface Api {
     suspend fun getMyProfile(): RemoteUserItem
 
     @PATCH("api/user/edit-profile")
-    suspend fun updateProfile(@Body updateProfileDTO: Map<String, Any>): Response<RemoteUserItem>
+    suspend fun updateProfile(@Body updateProfileDTO: UpdateProfileRequest): Response<Map<String, String>>
 }

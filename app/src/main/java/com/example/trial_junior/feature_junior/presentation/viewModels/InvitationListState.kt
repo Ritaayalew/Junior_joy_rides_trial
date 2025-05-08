@@ -6,8 +6,9 @@ import com.example.trial_junior.feature_junior.domain.util.SortingDirection
 
 data class InvitationListState(
     val items: List<InvitationItem> = emptyList(),
-    val invitationItemOrder: InvitationItemOrder = InvitationItemOrder.Time(SortingDirection.Down, true),
+    val invitationItemOrder: InvitationItemOrder = InvitationItemOrder.Time(SortingDirection.Down, true, true),
     val isLoading: Boolean = true,
     val error: String? = null,
-    val showHosted: Boolean = true
+    val showHosted: Boolean = true,
+    val showApproved: Boolean = true,
 )

@@ -34,22 +34,29 @@ class BasicInterviewUseCases @Inject constructor(
         repo.updateBasicInterviewItem(item.copy(upcoming = !item.upcoming))
     }
 
+    suspend fun toggleApprovedBasicInterviewItem(item: BasicInterviewItem) {
+        repo.updateBasicInterviewItem(item.copy(approved = !item.approved))
+    }
+
     suspend fun getBasicInterviewItemById(id: Int): BasicInterviewItem? {
         return repo.getSingleBasicInterviewItemById(id)
     }
 
     suspend fun getBasicInterviewItems(
-        showHosted: Boolean = true
+        showHosted: Boolean = true, showApproved: Boolean = true
     ): BasicInterviewUseCaseResult {
         var items = repo.getAllBasicInterviewsFromLocalCache()
         if (items.isEmpty()) {
             items = repo.getAllBasicInterviews()
         }
 
-        val filteredItems = if (!showHosted) {
-            items.filter { it.upcoming } // Show only upcoming items (upcoming = true)
-        } else {
-            items
+        val filteredItems = items.filter { item ->
+            // Apply showHosted filter: if showHosted is false, only include upcoming items
+            val hostedFilter = if (!showHosted) item.upcoming else true
+            // Apply showApproved filter: if showApproved is false, only include non-approved items
+            val approvedFilter = if (!showApproved) !item.approved else true
+            // Combine filters: item must pass both conditions
+            hostedFilter && approvedFilter
         }
 
         return BasicInterviewUseCaseResult.Success(filteredItems)

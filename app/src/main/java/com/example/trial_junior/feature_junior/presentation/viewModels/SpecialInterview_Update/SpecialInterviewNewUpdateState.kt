@@ -19,6 +19,7 @@ data class SpecialInterviewNewUpdateState(
         specialRequests = "",
         videoUrl = "",
         upcoming = true,
+        approved = false,
         id = null,
         userId = 0 // Default value; server will assign the actual userId
     ),

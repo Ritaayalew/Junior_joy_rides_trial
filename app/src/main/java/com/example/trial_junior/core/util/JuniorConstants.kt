@@ -13,6 +13,7 @@ object ListStrings {
     const val SORT_UP = "Sort Up"
     const val SORT_DOWN = "Sort Down"
     const val SHOW_CELEBRATED = "Show Celebrated"
+    const val SHOW_APPROVED = "Show Approved"
     const val SORT_BY = "Sort By"
     const val INVITATION_ITEM_DELETED = "Invitation Item has been deleted"
     const val UNDO = "Undo"

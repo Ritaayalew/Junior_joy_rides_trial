@@ -12,6 +12,7 @@ data class LocalInvitationItem(
     val date: String,
     val time: Long,
     val upcoming: Boolean,
+    val approved: Boolean,
     val guardianPhone: Long,
     val age: Int,
     val userId: Int,

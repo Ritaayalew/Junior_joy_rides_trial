@@ -8,6 +8,7 @@ data class RemoteWishListItem(
     val specialRequests: String,
     val imageUrl: String,
     val upcoming: Boolean,
+    val approved: Boolean,
     val id: Int? = null,
     val userId: Int? = null
 )

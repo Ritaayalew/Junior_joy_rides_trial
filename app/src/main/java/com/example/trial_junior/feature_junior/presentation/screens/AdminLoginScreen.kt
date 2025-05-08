@@ -2,27 +2,25 @@ package com.example.trial_junior.feature_junior.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -50,21 +48,38 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.trial_junior.feature_junior.presentation.util.Screen
-import com.example.trial_junior.feature_junior.presentation.viewModels.UserState
+import com.example.trial_junior.feature_junior.presentation.viewModels.UserUiEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.UserViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hiltViewModel()) {
+fun AdminLoginScreen(navController: NavHostController, viewModel: UserViewModel = hiltViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    val userState by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
-    // Navigate on successful login
-    LaunchedEffect(userState.token) {
-        if (userState.token != null) {
-            onLoginSuccess(navController)
+    // Handle navigation on successful admin login
+    LaunchedEffect(state.token, state.user?.role) {
+        if (state.token != null && state.user?.role?.lowercase() == "admin") {
+            println("Admin Login successful: Token=${state.token}")
+            navController.navigate(Screen.AdminDashboardScreen.route){
+                popUpTo("adminLogin") { inclusive = true }
+            }
+            viewModel.resetState() // Reset state after navigation
+        }
+    }
+
+    // Listen for snackbar events from UserViewModel
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UserUiEvent.ShowSnackbar -> {
+                    println("Admin Login error: ${event.message}")
+                }
+                else -> {}
+            }
         }
     }
 
@@ -77,29 +92,36 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
+
+        Icon(
+            imageVector = Icons.Filled.Person,
+            contentDescription = "Admin Icon",
+            modifier = Modifier.size(48.dp),
+            tint = Color(0xFFC5AE3D)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Login",
+            text = "Admin Login",
             style = TextStyle(
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFC5AE3D)
             ),
-            modifier = Modifier
-                .align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start)
                 .padding(bottom = 5.dp),
         )
         Divider(
             color = Color.Gray,
             thickness = 1.dp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp)
                 .padding(0.dp)
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Email") },
+            label = { Text("Admin Email") },
+            leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Admin Email") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         )
@@ -107,8 +129,8 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
+            label = { Text("Admin Password") },
+            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Admin Password") },
             trailingIcon = {
                 val image = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 val description = if (isPasswordVisible) "Toggle password visibility" else "Toggle password visibility"
@@ -121,37 +143,6 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
             shape = RoundedCornerShape(16.dp)
         )
 
-        // Error Display Below Password Field
-        if (userState.error != null) {
-            Text(
-                text = userState.error!!,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 4.dp)
-            )
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = false, onCheckedChange = {})
-            Text("Remember me")
-            Spacer(modifier = Modifier.weight(1f))
-            TextButton(onClick = { navController.navigate("forgotPassword") }) {
-                Text("Forgot password", color = Color(0xFFC5AE3D))
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            TextButton(onClick = {
-                navController.navigate(Screen.AdminLoginScreen.route) {
-                    popUpTo("login") { inclusive = true }
-                }
-            }) {
-                Text("Admin Login", color = Color(0xFFC5AE3D))
-            }
-        }
         Surface(
             color = Color(0xFFC5AE3D),
             shape = RoundedCornerShape(16.dp),
@@ -160,75 +151,41 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
             Button(
                 onClick = {
                     if (email.isNotBlank() && password.isNotEmpty()) {
-                        viewModel.loginUser(email, password)
+                        viewModel.loginAdmin(email, password)
                     } else {
-                        // Use setError method to update state properly
+                        println("Admin Login validation failed")
                         viewModel.setError("Email and password cannot be empty")
                     }
                 },
-                enabled = !userState.isLoading,
+                enabled = !state.isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D)),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = if (userState.isLoading) "Logging in..." else "Login",
-                        color = Color.White
-                    )
-                    if (userState.isLoading) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp)
-                    }
-                }
-            }
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(top = 24.dp)
-        ) {
-            Text(
-                "Contact us",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFFC5AE3D)
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                IconButton(onClick = { /* TODO: Handle YouTube click */ }) {
-                    Icon(Icons.Filled.PlayArrow, contentDescription = "YouTube")
-                }
-                IconButton(onClick = { /* TODO: Handle Instagram click */ }) {
-                    Icon(Icons.Filled.CameraAlt, contentDescription = "Instagram")
-                }
-                IconButton(onClick = { /* TODO: Handle Phone click */ }) {
-                    Icon(Icons.Filled.Call, contentDescription = "Phone")
-                }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text("Don't have an account? ")
-            TextButton(onClick = {
-                navController.navigate(Screen.SignupScreen.route) {
-                    popUpTo("login") { inclusive = true }
-                }
-            }) {
                 Text(
-                    "Signup",
-                    color = Color(0xFFC5AE3D)
+                    text = if (state.isLoading) "Logging in..." else "Admin Login",
+                    color = Color.White
                 )
+                if (state.isLoading) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp)
+                }
             }
+        }
+
+        if (state.error != null) {
+            Text(
+                text = state.error!!,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(onClick = { navController.popBackStack() }) {
+            Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back to Login")
+            Spacer(modifier = Modifier.width(4.dp))
+            Text("Back to Login", color = Color(0xFFC5AE3D))
         }
     }
 }
-
-private fun onLoginSuccess(navController: NavHostController) {
-    navController.navigate(Screen.ProfileScreen.route) {
-        popUpTo("login") { inclusive = true }
-    }
-}
-

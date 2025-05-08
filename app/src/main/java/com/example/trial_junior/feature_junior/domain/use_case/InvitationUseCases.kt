@@ -33,37 +33,43 @@ class InvitationUseCases @Inject constructor(
         repo.updateInvitationItem(invitation.copy(upcoming = !invitation.upcoming))
     }
 
+    suspend fun toggleApprovedInvitationItem(invitation: InvitationItem){
+        repo.updateInvitationItem(invitation.copy(approved = !invitation.approved))
+    }
+
     suspend fun getInvitationItemById(id: Int): InvitationItem? {
         return repo.getSingleInvitationItemById(id)
     }
 
     suspend fun getInvitationItems(
-        invitationItemOrder: InvitationItemOrder = InvitationItemOrder.Time(SortingDirection.Down, true)
-    ): InvitationUseCaseResult{
+        invitationItemOrder: InvitationItemOrder = InvitationItemOrder.Time(SortingDirection.Down, true, true)
+    ): InvitationUseCaseResult {
         var invitations = repo.getAllInvitationsFromLocalCache()
-        if(invitations.isEmpty()){
+        if (invitations.isEmpty()) {
             invitations = repo.getAllInvitations()
         }
 
-        val filteredInvitations = if(invitationItemOrder.showHosted){
-            invitations
-        }else {
-            invitations.filter { it.upcoming }
+        val filteredInvitations = invitations.filter { item ->
+            // Apply showHosted filter: if showHosted is false, only include upcoming items
+            val hostedFilter = if (!invitationItemOrder.showHosted) item.upcoming else true
+            // Apply showApproved filter: if showApproved is false, only include non-approved items
+            val approvedFilter = if (!invitationItemOrder.showApproved) !item.approved else true
+            // Combine filters: item must pass both conditions
+            hostedFilter && approvedFilter
         }
 
-        return when(invitationItemOrder.sortingDirection){
+        return when (invitationItemOrder.sortingDirection) {
             is SortingDirection.Down -> {
-                when (invitationItemOrder){
+                when (invitationItemOrder) {
                     is InvitationItemOrder.Time -> InvitationUseCaseResult.Success(filteredInvitations.sortedByDescending { it.time })
                 }
             }
             is SortingDirection.Up -> {
-                when (invitationItemOrder){
+                when (invitationItemOrder) {
                     is InvitationItemOrder.Time -> InvitationUseCaseResult.Success(filteredInvitations.sortedBy { it.time })
                 }
             }
         }
-
     }
 
 }

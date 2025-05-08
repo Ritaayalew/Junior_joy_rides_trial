@@ -19,6 +19,7 @@ package com.example.trial_junior.feature_junior.domain.model
 interface ListItem {
     val id: Int?
     val upcoming: Boolean
+    val approved: Boolean
 }
 
 data class InvitationItem(
@@ -29,6 +30,7 @@ data class InvitationItem(
     val date: String,
     val time: Long,
     override val upcoming: Boolean,
+    override val approved: Boolean,
     val guardianPhone: Long,
     val age: Int,
     val userId: Int,

@@ -33,22 +33,29 @@ class WishListUseCases @Inject constructor(
         repo.updateWishListItem(item.copy(upcoming = !item.upcoming))
     }
 
+    suspend fun toggleApprovedWishListItem(item: WishListItem) {
+        repo.updateWishListItem(item.copy(approved = !item.approved))
+    }
+
     suspend fun getWishListItemById(id: Int): WishListItem? {
         return repo.getSingleWishListItemById(id)
     }
 
     suspend fun getWishListItems(
-        showHosted: Boolean = true
+        showHosted: Boolean = true, showApproved: Boolean = true
     ): WishListUseCaseResult {
         var items = repo.getAllWishListItemsFromLocalCache()
         if (items.isEmpty()) {
             items = repo.getAllWishListItems()
         }
 
-        val filteredItems = if (!showHosted) {
-            items.filter { it.upcoming } // Show only upcoming items (upcoming = true)
-        } else {
-            items
+        val filteredItems = items.filter { item ->
+            // Apply showHosted filter: if showHosted is false, only include upcoming items
+            val hostedFilter = if (!showHosted) item.upcoming else true
+            // Apply showApproved filter: if showApproved is false, only include non-approved items
+            val approvedFilter = if (!showApproved) !item.approved else true
+            // Combine filters: item must pass both conditions
+            hostedFilter && approvedFilter
         }
 
         return WishListUseCaseResult.Success(filteredItems)

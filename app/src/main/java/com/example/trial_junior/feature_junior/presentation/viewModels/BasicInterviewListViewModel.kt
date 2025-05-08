@@ -24,7 +24,7 @@ class BasicInterviewListViewModel @Inject constructor(
 
     override suspend fun fetchItems(): ListUseCaseResult<BasicInterviewItem> {
         return try {
-            when (val result = useCases.getBasicInterviewItems(showHosted = true)) {
+            when (val result = useCases.getBasicInterviewItems(showHosted = true, showApproved = true)) {
                 is BasicInterviewUseCaseResult.Success -> ListUseCaseResult.Success(result.items)
                 is BasicInterviewUseCaseResult.Error -> ListUseCaseResult.Error(result.message)
             }
@@ -45,6 +45,10 @@ class BasicInterviewListViewModel @Inject constructor(
         useCases.toggleHostedBasicInterviewItem(item)
     }
 
+    override suspend fun toggleApproved(item: BasicInterviewItem) {
+        useCases.toggleApprovedBasicInterviewItem(item)
+    }
+
     fun onEvent(event: BasicInterviewEvent) {
         when (event) {
             is BasicInterviewEvent.Delete -> {
@@ -60,6 +64,9 @@ class BasicInterviewListViewModel @Inject constructor(
             is BasicInterviewEvent.ToggleHosted -> {
                 super.onEvent(ListEvent.ToggleHosted(event.item))
             }
+            is BasicInterviewEvent.ToggleApproved -> {
+                super.onEvent(ListEvent.ToggleApproved(event.item))
+            }
         }
     }
 }
@@ -68,6 +75,7 @@ sealed class BasicInterviewEvent {
     data class Delete(val item: BasicInterviewItem) : BasicInterviewEvent()
     data class UndoDelete(val item: BasicInterviewItem) : BasicInterviewEvent()
     data class ToggleHosted(val item: BasicInterviewItem) : BasicInterviewEvent()
+    data class ToggleApproved(val item: BasicInterviewItem) : BasicInterviewEvent()
 }
 
 

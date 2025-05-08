@@ -12,6 +12,7 @@ data class LocalWishListItem(
     val specialRequests: String,
     val imageUrl: String,
     val upcoming: Boolean,
+    val approved: Boolean,
     @PrimaryKey val id: Int,
     val userId: Int?
 )

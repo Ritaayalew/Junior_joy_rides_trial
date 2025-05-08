@@ -35,22 +35,29 @@ class SpecialInterviewUseCases @Inject constructor(
         repo.updateSpecialInterviewItem(item.copy(upcoming = !item.upcoming))
     }
 
+    suspend fun toggleApprovedSpecialInterviewItem(item: SpecialInterviewItem) {
+        repo.updateSpecialInterviewItem(item.copy(approved = !item.approved))
+    }
+
     suspend fun getSpecialInterviewItemById(id: Int): SpecialInterviewItem? {
         return repo.getSingleSpecialInterviewItemById(id)
     }
 
     suspend fun getSpecialInterviewItems(
-        showHosted: Boolean = true
+        showHosted: Boolean = true, showApproved: Boolean = true
     ): SpecialInterviewUseCaseResult {
         var items = repo.getAllSpecialInterviewsFromLocalCache()
         if (items.isEmpty()) {
             items = repo.getAllSpecialInterviews()
         }
 
-        val filteredItems = if (!showHosted) {
-            items.filter { it.upcoming } // Show only upcoming items (upcoming = true)
-        } else {
-            items
+        val filteredItems = items.filter { item ->
+            // Apply showHosted filter: if showHosted is false, only include upcoming items
+            val hostedFilter = if (!showHosted) item.upcoming else true
+            // Apply showApproved filter: if showApproved is false, only include non-approved items
+            val approvedFilter = if (!showApproved) !item.approved else true
+            // Combine filters: item must pass both conditions
+            hostedFilter && approvedFilter
         }
 
         return SpecialInterviewUseCaseResult.Success(filteredItems)

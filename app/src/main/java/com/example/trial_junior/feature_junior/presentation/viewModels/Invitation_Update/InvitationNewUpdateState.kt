@@ -19,6 +19,7 @@ data class InvitationNewUpdateState(
         date = "",
         time = 0L,
         upcoming = true,
+        approved = false,
         guardianPhone = 0L,
         age = 0,
         userId = 0, // Default value; server will set it

@@ -1,5 +1,7 @@
 package com.example.trial_junior.feature_junior.presentation.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,14 +29,13 @@ fun SpecialInterviewItemCard(
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
-    onToggleHostedClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -58,12 +59,12 @@ fun SpecialInterviewItemCard(
                         contentDescription = "Event Icon",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .size(28.dp)
+                            .size(32.dp)
                             .padding(end = 12.dp)
                     )
                     Column {
                         Text(
-                            text = "Special Interview with ${specialInterview.childName}",
+                            text = "Special Interview",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground,
@@ -81,18 +82,27 @@ fun SpecialInterviewItemCard(
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
+                            fontSize = 15.sp
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = if (specialInterview.upcoming) Color(0xFFE4851C) else Color(0xFF4CAF50),
                         labelColor = Color.White
                     ),
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    border = BorderStroke(1.dp, Color.White)
                 )
             }
             Text(
-                text = "Guardian: ${specialInterview.guardianName}",
+                text = "Child Name: ${specialInterview.childName}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Text(
+                text = "Guardian Name: ${specialInterview.guardianName}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
@@ -103,15 +113,6 @@ fun SpecialInterviewItemCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-            Text(
-                text = "Video URL: ${specialInterview.videoUrl}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 16.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 4.dp)
             )
             Divider(
@@ -126,24 +127,42 @@ fun SpecialInterviewItemCard(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                HostedButton(
-                    onToggleHostedClick = onToggleHostedClick,
-                    color = MaterialTheme.colorScheme.secondary,
-                    upcoming = specialInterview.upcoming,
-                    modifier = Modifier.size(48.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable(onClick = onEditClick)
+                        .padding(4.dp)
+                ) {
+                    EditButton(
+                        onEditClick = onEditClick,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Text(
+                        text = "Edit",
+                        color = Color.Black,
+                        fontSize = 17.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
-                EditButton(
-                    onEditClick = onEditClick,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                DeleteButton(
-                    onDeleteClick = onDeleteClick,
-                    modifier = Modifier.size(32.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable(onClick = onDeleteClick)
+                        .padding(4.dp)
+                ) {
+                    DeleteButton(
+                        onDeleteClick = onDeleteClick,
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Text(
+                        text = "Cancel",
+                        color = Color.Red,
+                        fontSize = 17.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -158,16 +177,16 @@ fun SpecialInterviewItemCardPreview() {
                 childName = "Meba",
                 guardianName = "Freail",
                 guardianEmail = "rita@gmail.com",
-                upcoming = true, // Set to true to show "PENDING"
+                upcoming = true,
+                approved = true,
                 specialRequests = "Birthday celebration with the ethipis",
                 guardianPhone = 988984673,
                 age = 3,
-                videoUrl = "https://www.youtube.com/watch?v=0wjnk62I01c&list=PPSV" ,
+                videoUrl = "https://www.youtube.com/watch?v=0wjnk62I01c&list=PPSV",
                 id = 1
             ),
             onDeleteClick = {},
-            onEditClick = {} ,
-            onToggleHostedClick = {}
+            onEditClick = {},
         )
     }
 }

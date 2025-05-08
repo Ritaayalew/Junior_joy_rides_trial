@@ -6,6 +6,8 @@ data class RemoteUserItem(
     val lastName: String,
     val email: String,
     val role: String,
+    val profileImageUrl: String? = null,
+    val backgroundImageUrl: String? = null,
     val invitations: List<RemoteInvitationItem>? = emptyList(),
     val basicInterviews: List<RemoteBasicInterviewItem>? = emptyList(),
     val specialInterviews: List<RemoteSpecialInterviewItem>? = emptyList(),

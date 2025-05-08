@@ -22,7 +22,7 @@ class SpecialInterviewListViewModel @Inject constructor(
 
     override suspend fun fetchItems(): ListUseCaseResult<SpecialInterviewItem> {
         return try {
-            when (val result = useCases.getSpecialInterviewItems(showHosted = true)) {
+            when (val result = useCases.getSpecialInterviewItems(showHosted = true, showApproved = true)) {
                 is SpecialInterviewUseCaseResult.Success -> ListUseCaseResult.Success(result.items)
                 is SpecialInterviewUseCaseResult.Error -> ListUseCaseResult.Error(result.message)
             }
@@ -43,6 +43,10 @@ class SpecialInterviewListViewModel @Inject constructor(
         useCases.toggleHostedSpecialInterviewItem(item)
     }
 
+    override suspend fun toggleApproved(item: SpecialInterviewItem) {
+        useCases.toggleApprovedSpecialInterviewItem(item)
+    }
+
     fun onEvent(event: SpecialInterviewEvent) {
         when (event) {
             is SpecialInterviewEvent.Delete -> {
@@ -58,6 +62,9 @@ class SpecialInterviewListViewModel @Inject constructor(
             is SpecialInterviewEvent.ToggleHosted -> {
                 super.onEvent(ListEvent.ToggleHosted(event.item))
             }
+            is SpecialInterviewEvent.ToggleApproved-> {
+                super.onEvent(ListEvent.ToggleApproved(event.item))
+            }
         }
     }
 }
@@ -66,4 +73,5 @@ sealed class SpecialInterviewEvent {
     data class Delete(val item: SpecialInterviewItem) : SpecialInterviewEvent()
     data class UndoDelete(val item: SpecialInterviewItem) : SpecialInterviewEvent()
     data class ToggleHosted(val item: SpecialInterviewItem) : SpecialInterviewEvent()
+    data class ToggleApproved(val item: SpecialInterviewItem) : SpecialInterviewEvent()
 }

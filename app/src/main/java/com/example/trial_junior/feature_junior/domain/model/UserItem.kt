@@ -6,6 +6,8 @@ data class UserItem(
     val lastName: String,
     val email: String,
     val role: String,
+    val profileImageUrl: String? = null,
+    val backgroundImageUrl: String? = null,
     val invitations: List<InvitationItem>? = emptyList(),
     val basicInterviews: List<BasicInterviewItem>? = emptyList(),
     val specialInterviews: List<SpecialInterviewItem>? = emptyList(),

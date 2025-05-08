@@ -16,7 +16,7 @@ import com.example.trial_junior.feature_junior.data.local.dto.LocalWishListItem
         LocalWishListItem::class,
         LocalUserItem::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class JuniorDatabase: RoomDatabase() {

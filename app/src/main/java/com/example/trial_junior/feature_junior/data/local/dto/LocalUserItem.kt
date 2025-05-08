@@ -12,5 +12,7 @@ data class LocalUserItem(
     val email: String,
     val password: String,
     val salt: String,
-    val role: String
+    val role: String,
+    val profileImageUrl: String? = null,
+    val backgroundImageUrl: String? = null
 )

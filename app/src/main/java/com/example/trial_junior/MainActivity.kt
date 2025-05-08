@@ -15,6 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.trial_junior.feature_junior.presentation.screens.AdminDashboardScreen
+import com.example.trial_junior.feature_junior.presentation.screens.AdminLoginScreen
 import com.example.trial_junior.feature_junior.presentation.screens.EditProfileScreen
 import com.example.trial_junior.feature_junior.presentation.screens.ExampleScreen
 import com.example.trial_junior.feature_junior.presentation.screens.LoginScreen
@@ -65,10 +67,26 @@ class MainActivity : ComponentActivity() {
                                 viewModel = userViewModel
                             )
                         }
+                        composable(route = Screen.AdminLoginScreen.route) {
+                            AdminLoginScreen(
+                                navController = navController,
+                                viewModel = userViewModel
+                            )
+                        }
+                        composable(route = Screen.AdminDashboardScreen.route) {
+                            AdminDashboardScreen(
+                                navController = navController,
+                                modifier = Modifier
+                            )
+                        }
                         composable(route = Screen.ProfileScreen.route) {
                             ProfileScreen(
                                 navController = navController,
-                                viewModel = userViewModel
+                                userViewModel = userViewModel,
+                                invitationViewModel = invitationViewModel,
+                                wishListViewModel = wishlistViewModel,
+                                basicInterviewViewModel = basicInterviewViewModel,
+                                specialInterviewViewModel = specialInterviewViewModel
                             )
                         }
                         composable(route = Screen.EditProfileScreen.route) {
