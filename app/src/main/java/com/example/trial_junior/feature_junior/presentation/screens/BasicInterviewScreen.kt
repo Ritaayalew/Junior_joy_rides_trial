@@ -19,7 +19,7 @@ import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInte
 
 
 @Composable
-fun Interview(viewModel: BasicInterviewNewUpdateViewModel = hiltViewModel()) {
+fun BasicInterviewScreen(viewModel: BasicInterviewNewUpdateViewModel = hiltViewModel()) {
     val (currentForm, setCurrentForm) = rememberSaveable { mutableStateOf("BasicInterview") }
     val defaultPadding = 16.dp
 
@@ -86,14 +86,14 @@ fun Interview(viewModel: BasicInterviewNewUpdateViewModel = hiltViewModel()) {
 
         // Show the selected form
         when (currentForm) {
-            "TalentShow" -> TalentShowForm()
-            else -> BasicInterview(viewModel) // ✅ Pass ViewModel correctly
+            "TalentShow" -> SpecialInterviewScreen(viewModel = hiltViewModel())
+            else -> BasicInterview(viewModel = hiltViewModel()) // ✅ Pass ViewModel correctly
         }
     }
 }
 
 @Composable
-fun BasicInterview(viewModel: BasicInterviewNewUpdateViewModel) {
+fun BasicInterview(viewModel: BasicInterviewNewUpdateViewModel= hiltViewModel()) {
     val state = viewModel.state.value
     val itemSpacing = 16.dp
 
@@ -179,5 +179,5 @@ fun BasicInterview(viewModel: BasicInterviewNewUpdateViewModel) {
 @Preview(showSystemUi = true)
 @Composable
 fun PrevInterview() {
-    Interview()
+    BasicInterviewScreen()
 }

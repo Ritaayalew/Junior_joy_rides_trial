@@ -28,17 +28,15 @@ import androidx.compose.ui.graphics.Color
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import java.util.Calendar
-
+//857120
 
 @Composable
-fun Invitation() {
+fun InvitationScreen() {
     val (currentForm, setCurrentForm) = rememberSaveable { mutableStateOf("invitation") }
     val defaultPadding = 16.dp
 
@@ -103,8 +101,8 @@ fun Invitation() {
         Spacer(modifier = Modifier.height(16.dp))
 
         when (currentForm) {
-            "wishlist" -> WishList(viewModel = hiltViewModel()) // Passing the viewModel here
-            else -> InviteEthiopis(viewModel = hiltViewModel()) // Also passing the viewModel here
+            "wishlist" -> WishListScreen(viewModel = hiltViewModel()) // Passing the viewModel here
+            else -> Invitation(viewModel = hiltViewModel()) // Also passing the viewModel here
         }
 
 
@@ -114,7 +112,7 @@ fun Invitation() {
 
 
 @Composable
-fun InviteEthiopis(viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
+fun Invitation(viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
     val state = viewModel.state.value
     val context = LocalContext.current
     val spacing = 16.dp
@@ -318,5 +316,5 @@ fun formatTime(millis: Long): String {
 @Preview(showSystemUi = true)
 @Composable
 fun PrevInvitation() {
-    Invitation()
+    InvitationScreen()
 }

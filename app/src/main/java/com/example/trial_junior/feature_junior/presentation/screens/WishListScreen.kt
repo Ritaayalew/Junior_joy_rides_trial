@@ -18,15 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.WishList_Update.WishListNewUpdateEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.WishList_Update.WishListNewUpdateViewModel
 import java.util.Calendar
 
 @Composable
-fun WishList(viewModel: WishListNewUpdateViewModel) {
+fun WishListScreen(viewModel: WishListNewUpdateViewModel= hiltViewModel()) {
     val context = LocalContext.current
     val state = viewModel.state.value
 

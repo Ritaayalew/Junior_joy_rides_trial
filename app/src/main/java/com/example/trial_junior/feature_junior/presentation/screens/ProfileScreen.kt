@@ -234,7 +234,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("invitation_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.InvitationScreen.route + "?invitationId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -258,7 +260,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("basic_interview_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.BasicInterviewScreen.route + "?basicInterviewId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -282,7 +286,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("special_interview_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.SpecialInterviewScreen.route + "?specialInterviewId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -306,7 +312,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("${Screen.WishListUpdateScreen.route}?wishListId=${item.id}")
+                                navController.navigate(
+                                    Screen.WishListScreen.route + "?wishListId=${item.id}"
+                                )
                             }
                         )
                     }

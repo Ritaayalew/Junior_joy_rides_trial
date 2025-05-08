@@ -17,13 +17,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.trial_junior.feature_junior.presentation.screens.AdminDashboardScreen
 import com.example.trial_junior.feature_junior.presentation.screens.AdminLoginScreen
+import com.example.trial_junior.feature_junior.presentation.screens.BasicInterviewScreen
 import com.example.trial_junior.feature_junior.presentation.screens.EditProfileScreen
-import com.example.trial_junior.feature_junior.presentation.screens.ExampleScreen
-import com.example.trial_junior.feature_junior.presentation.screens.Invitation
+import com.example.trial_junior.feature_junior.presentation.screens.InvitationScreen
 import com.example.trial_junior.feature_junior.presentation.screens.LoginScreen
 import com.example.trial_junior.feature_junior.presentation.screens.ProfileScreen
 import com.example.trial_junior.feature_junior.presentation.screens.SignupScreen
+import com.example.trial_junior.feature_junior.presentation.screens.SpecialInterviewScreen
 import com.example.trial_junior.feature_junior.presentation.screens.WishListNewUpdateScreen
+import com.example.trial_junior.feature_junior.presentation.screens.WishListScreen
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.InvitationListViewModel
@@ -97,7 +99,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(
-                            route = Screen.WishListUpdateScreen.route + "?wishListId={wishListId}",
+                            route = Screen.WishListScreen.route + "?wishListId={wishListId}",
                             arguments = listOf(
                                 navArgument(
                                     name = "wishListId"
@@ -107,37 +109,75 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            WishListNewUpdateScreen(
-                                navController = navController
-                            )
-                        }
-
-
-
-                        composable(route = Screen.ExampleScreen.route) {
-                            ExampleScreen(
-                                navController = navController,
-                                invitationViewModel = invitationViewModel,
-                                wishlistViewModel = wishlistViewModel,
-                                basicInterviewViewModel = basicInterviewViewModel,
-                                specialInterviewViewModel = specialInterviewViewModel
-                            )
+                            WishListScreen()
                         }
                         composable(
-                            route = Screen.WishListUpdateScreen.route + "?wishListId={wishListId}",
+                            route = Screen.BasicInterviewScreen.route + "?basicInterviewId={basicInterviewId}",
                             arguments = listOf(
                                 navArgument(
-                                    name = "wishListId"
+                                    name = "basicInterviewId"
                                 ) {
                                     type = NavType.IntType
                                     defaultValue = -1
                                 }
                             )
                         ) {
-                            WishListNewUpdateScreen(
-                                navController = navController
-                            )
+                            BasicInterviewScreen()
                         }
+                        composable(
+                            route = Screen.SpecialInterviewScreen.route + "?specialInterviewId={specialInterviewId}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "specialInterviewId"
+                                ) {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            SpecialInterviewScreen()
+                        }
+                        composable(
+                            route = Screen.InvitationScreen.route + "?invitationId={invitationId}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "invitationId"
+                                ) {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            InvitationScreen()
+                        }
+
+
+
+
+//                        composable(route = Screen.ExampleScreen.route) {
+//                            ExampleScreen(
+//                                navController = navController,
+//                                invitationViewModel = invitationViewModel,
+//                                wishlistViewModel = wishlistViewModel,
+//                                basicInterviewViewModel = basicInterviewViewModel,
+//                                specialInterviewViewModel = specialInterviewViewModel
+//                            )
+//                        }
+//                        composable(
+//                            route = Screen.WishListUpdateScreen.route + "?wishListId={wishListId}",
+//                            arguments = listOf(
+//                                navArgument(
+//                                    name = "wishListId"
+//                                ) {
+//                                    type = NavType.IntType
+//                                    defaultValue = -1
+//                                }
+//                            )
+//                        ) {
+//                            WishListNewUpdateScreen(
+//                                navController = navController
+//                            )
+//                        }
                         // Placeholder for InvitationNewUpdateScreen route if needed
                         // composable(route = Screen.InvitationNewUpdateScreen.route) { ... }
                     }

@@ -8,8 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,7 +24,7 @@ import com.example.trial_junior.feature_junior.presentation.viewModels.SpecialIn
 
 
 @Composable
-fun TalentShowForm(viewModel: SpecialInterviewNewUpdateViewModel = hiltViewModel()) {
+fun SpecialInterviewScreen(viewModel: SpecialInterviewNewUpdateViewModel = hiltViewModel()) {
     val context = LocalContext.current
 
     val (name, setName) = rememberSaveable { mutableStateOf("") }
