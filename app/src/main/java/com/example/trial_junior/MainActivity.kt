@@ -95,6 +95,24 @@ class MainActivity : ComponentActivity() {
                                 viewModel = userViewModel
                             )
                         }
+                        composable(
+                            route = Screen.WishListUpdateScreen.route + "?wishListId={wishListId}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "wishListId"
+                                ) {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            WishListNewUpdateScreen(
+                                navController = navController
+                            )
+                        }
+
+
+
                         composable(route = Screen.ExampleScreen.route) {
                             ExampleScreen(
                                 navController = navController,

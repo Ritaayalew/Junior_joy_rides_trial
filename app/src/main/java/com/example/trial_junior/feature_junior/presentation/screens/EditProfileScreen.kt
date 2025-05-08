@@ -179,7 +179,7 @@ fun EditProfileScreen(navController: NavHostController, viewModel: UserViewModel
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(170.dp)
-                        .background(Color.LightGray), // Always set the gray background
+                        .background(Color.Gray), // Always set the gray background
                     contentAlignment = Alignment.Center
                 ) {
                     // Overlay background image if available
@@ -187,8 +187,6 @@ fun EditProfileScreen(navController: NavHostController, viewModel: UserViewModel
                         Image(
                             painter = rememberAsyncImagePainter(
                                 model = backgroundImageUri,
-                                placeholder = painterResource(id = R.drawable.profile),
-                                error = painterResource(id = R.drawable.profile)
                             ),
                             contentDescription = "Background Image",
                             modifier = Modifier

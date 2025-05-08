@@ -134,8 +134,6 @@ fun ProfileScreen(
                         Image(
                             painter = rememberAsyncImagePainter(
                                 model = user.backgroundImageUrl,
-                                placeholder = painterResource(id = R.drawable.profile),
-                                error = painterResource(id = R.drawable.profile)
                             ),
                             contentDescription = "Background Image",
                             modifier = Modifier
