@@ -14,4 +14,10 @@ sealed class Screen(val route: String) {
     object AdminLoginScreen: Screen("admin_login_screen")
     object AdminDashboardScreen: Screen("admin_dashboard_screen")
 
+
+    object BasicInterviewScreen: Screen("BasicInterview_form")
+    object TalentShowScreen: Screen("TalentShow_form")
+    object InvitationScreen: Screen("Invitation_form")
+    object WishListScreen: Screen("WishList_form")
+
 }
