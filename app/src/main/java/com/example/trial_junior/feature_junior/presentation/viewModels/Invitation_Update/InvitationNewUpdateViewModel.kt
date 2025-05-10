@@ -46,32 +46,77 @@ class InvitationNewUpdateViewModel @Inject constructor(
     }
 
     init {
-        savedStateHandle.get<Int>("invitationId")?.let { id ->
-            if (id != -1) {
+        val id = savedStateHandle.get<Int>("invitationId")
+        println("InvitationNewUpdateViewModel: Retrieved invitationId = $id") // Log the initial ID retrieval
+        id?.let { invitationId ->
+            if (invitationId != -1) {
+                println("InvitationNewUpdateViewModel: Fetching Invitation with id: $invitationId") // Log fetch start
                 viewModelScope.launch(dispatcher + errorHandler) {
-                    invitationUseCases.getInvitationItemById(id)?.also { invitation ->
-                        currentInvitationId = id
+                    val invitation = invitationUseCases.getInvitationItemById(invitationId)
+                    println("InvitationNewUpdateViewModel: Fetched Invitation result = $invitation") // Log fetch result
+                    invitation?.also { fetchedInvitation ->
+                        currentInvitationId = invitationId
+                        println("InvitationNewUpdateViewModel: Successfully fetched Invitation: $fetchedInvitation") // Log success
                         _state.value = _state.value.copy(
-                            invitation = invitation,
+                            invitation = fetchedInvitation,
                             isLoading = false,
-                            isChildNameHintVisible = invitation.childName.isBlank(),
-                            isGuardianEmailHintVisible = invitation.guardianEmail.isBlank(),
-                            isSpecialRequestsHintVisible = invitation.specialRequests.isBlank(),
-                            isAddressHintVisible = invitation.address.isBlank(),
-                            isDateHintVisible = invitation.date.isBlank(),
-                            isTimeHintVisible = invitation.time <= 0,
-                            isGuardianPhoneHintVisible = invitation.guardianPhone <= 0,
-                            isAgeHintVisible = invitation.age <= 0
+                            isChildNameHintVisible = fetchedInvitation.childName.isBlank(),
+                            isGuardianEmailHintVisible = fetchedInvitation.guardianEmail.isBlank(),
+                            isSpecialRequestsHintVisible = fetchedInvitation.specialRequests.isBlank(),
+                            isAddressHintVisible = fetchedInvitation.address.isBlank(),
+                            isDateHintVisible = fetchedInvitation.date.isBlank(),
+                            isTimeHintVisible = fetchedInvitation.time <= 0,
+                            isGuardianPhoneHintVisible = fetchedInvitation.guardianPhone <= 0,
+                            isAgeHintVisible = fetchedInvitation.age <= 0
+                        )
+                    } ?: run {
+                        println("InvitationNewUpdateViewModel: No Invitation found for id: $invitationId") // Log not found
+                        _state.value = _state.value.copy(
+                            error = "Invitation not found for ID $invitationId",
+                            isLoading = false
                         )
                     }
                 }
             } else {
-                _state.value = _state.value.copy(
-                    isLoading = false
-                )
+                println("InvitationNewUpdateViewModel: invitationId is -1, creating new entry") // Log new entry
+                _state.value = _state.value.copy(isLoading = false)
             }
+        } ?: run {
+            println("InvitationNewUpdateViewModel: invitationId is null") // Log null case
+            _state.value = _state.value.copy(
+                error = "Invalid invitation ID",
+                isLoading = false
+            )
         }
     }
+
+//    init {
+//        savedStateHandle.get<Int>("invitationId")?.let { id ->
+//            if (id != -1) {
+//                viewModelScope.launch(dispatcher + errorHandler) {
+//                    invitationUseCases.getInvitationItemById(id)?.also { invitation ->
+//                        currentInvitationId = id
+//                        _state.value = _state.value.copy(
+//                            invitation = invitation,
+//                            isLoading = false,
+//                            isChildNameHintVisible = invitation.childName.isBlank(),
+//                            isGuardianEmailHintVisible = invitation.guardianEmail.isBlank(),
+//                            isSpecialRequestsHintVisible = invitation.specialRequests.isBlank(),
+//                            isAddressHintVisible = invitation.address.isBlank(),
+//                            isDateHintVisible = invitation.date.isBlank(),
+//                            isTimeHintVisible = invitation.time <= 0,
+//                            isGuardianPhoneHintVisible = invitation.guardianPhone <= 0,
+//                            isAgeHintVisible = invitation.age <= 0
+//                        )
+//                    }
+//                }
+//            } else {
+//                _state.value = _state.value.copy(
+//                    isLoading = false
+//                )
+//            }
+//        }
+//    }
 
     fun onEvent(event: InvitationNewUpdateEvent) {
         when (event) {

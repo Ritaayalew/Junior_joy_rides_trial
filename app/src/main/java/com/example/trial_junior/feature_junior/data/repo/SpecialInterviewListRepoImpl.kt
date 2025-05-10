@@ -62,6 +62,7 @@ class SpecialInterviewListRepoImpl(
     }
 
     override suspend fun getSingleSpecialInterviewItemById(id: Int): SpecialInterviewItem? {
+        getAllSpecialInterviewsFromRemote()
         return dao.getSingleSpecialInterviewItemById(id)?.toSpecialInterviewItem()
     }
 

@@ -1,38 +1,30 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.trial_junior.feature_junior.presentation.util.Screen
@@ -85,7 +77,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             color = Color.Gray,
             thickness = 1.dp,
             modifier = Modifier
-                .padding(top = 8.dp)
+                .padding(vertical = 8.dp)
                 .padding(0.dp)
         )
 
@@ -103,47 +95,66 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
-            label = { Text("First name") },
+            label = { Text("First name", color = Color.Black, fontSize = 16.sp) },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "First name") },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(percent = 30),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDEDEDE))
-                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
-
-
+                .shadow(elevation = 6.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
         OutlinedTextField(
             value = lastName,
             onValueChange = { lastName = it },
-            label = { Text("Last Name") },
+            label = { Text("Last Name", color = Color.Black, fontSize = 16.sp) },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Last name") },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(percent = 30),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDEDEDE))
-                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
-
+                .shadow(elevation = 6.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text("Email", color = Color.Black, fontSize = 16.sp) },
             leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Email") },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(percent = 30),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDEDEDE))
-                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
-
+                .shadow(elevation = 6.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
-            shape = RoundedCornerShape(16.dp),
+            label = { Text("Password", color = Color.Black, fontSize = 16.sp) },
+            shape = RoundedCornerShape(percent = 30),
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
             trailingIcon = {
                 val image = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -155,31 +166,42 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDEDEDE))
-                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
+                .shadow(elevation = 4.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
+
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm password") },
+            label = { Text("Confirm password", color = Color.Black, fontSize = 16.sp) },
+            shape = RoundedCornerShape(percent = 30),
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Confirm password") },
             trailingIcon = {
                 val image = if (isConfirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 val description = if (isConfirmPasswordVisible) "Hide confirm password" else "Show confirm password"
                 IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
-                    Icon(
-                        imageVector = image,
-                        contentDescription = description
-                    )
+                    Icon(imageVector = image, contentDescription = description)
                 }
             },
             visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDEDEDE))
-                .border(border = BorderStroke(width = 1.dp, color = Color(0xFFDEDEDE))),
-
+                .shadow(elevation = 4.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
         Row(
@@ -193,12 +215,18 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             Text("I agree with the ")
             Text(
                 text = "policy",
-                color = Color(0xFFC5AE3D)
+                color = Color(0xFFC5AE3D),
+                modifier = Modifier.clickable{
+                    navController.navigate(Screen.PrivacyAndPolicyScreen.route)
+                }
             )
             Text(" and ")
             Text(
                 text = "privacy",
-                color = Color(0xFFC5AE3D)
+                color = Color(0xFFC5AE3D),
+                modifier = Modifier.clickable{
+                    navController.navigate(Screen.PrivacyAndPolicyScreen.route)
+                }
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
@@ -238,7 +266,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Already have an account? ")
-            TextButton( onClick = { navController.navigate(Screen.LoginScreen.route) }) {
+            TextButton(onClick = { navController.navigate(Screen.LoginScreen.route) }) {
                 Text(
                     text = "Signin",
                     color = Color(0xFFC5AE3D),

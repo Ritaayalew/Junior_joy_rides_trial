@@ -22,15 +22,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 
 @Composable
 fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-    val dayLabels = listOf("M", "T", "W", "T", "F", "S", "S") // Adjust if your data list size is different
+    val dayLabels = listOf("Invitations", "Wishes", "Special interviews", "Basic interviews") // 7 days of the week
 
     Card(
         modifier = modifier.padding(16.dp),
@@ -50,7 +50,7 @@ fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
                 val barWidth = (size.width - 2 * paddingFromAxes) / (data.size * 2)
                 val maxVal = data.maxOrNull() ?: 1
                 val graphHeight = size.height - 2 * paddingFromAxes // Height available for the graph itself
-                val scaleFactor = graphHeight / maxVal
+                val scaleFactor = graphHeight / maxVal.toFloat()
 
                 // Define the origin of the graph (bottom-left corner of the drawable area)
                 val originX = paddingFromAxes
@@ -81,13 +81,11 @@ fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
                     drawRect(
                         color = Color(0xFF344BFD),
                         topLeft = Offset(barLeft, barTop),
-                        size = Size(barWidth, value * scaleFactor),
-
-                        )
+                        size = Size(barWidth, value * scaleFactor)
+                    )
 
                     // Draw x-axis labels (under each bar)
-                    // Use the day label for the current index
-                    val xLabel = dayLabels.getOrElse(index) { "" } // Get label, default to empty if index out of bounds
+                    val xLabel = dayLabels.getOrElse(index) { "" }
                     val textLayoutResultX = textMeasurer.measure(
                         text = xLabel,
                         style = TextStyle(fontSize = 12.sp, textAlign = TextAlign.Center)
@@ -103,7 +101,7 @@ fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
                             Paint().asFrameworkPaint().apply {
                                 color = android.graphics.Color.BLACK
                                 textSize = with(density) { 12.sp.toPx() }
-                                textAlign = android.graphics.Paint.Align.LEFT // Align left for drawing text
+                                textAlign = android.graphics.Paint.Align.LEFT
                             }
                         )
                     }
@@ -132,7 +130,7 @@ fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
                             Paint().asFrameworkPaint().apply {
                                 color = android.graphics.Color.BLACK
                                 textSize = with(density) { 12.sp.toPx() }
-                                textAlign = android.graphics.Paint.Align.LEFT // Align left for drawing text
+                                textAlign = android.graphics.Paint.Align.LEFT
                             }
                         )
                     }
@@ -146,6 +144,12 @@ fun BarGraph(modifier: Modifier = Modifier, data: List<Int>) {
 fun BarGraphScreen() {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "Bar Graph", fontSize = 24.sp)
-        BarGraph(data = listOf(10, 30, 50, 20, 40))
+        BarGraph(data = listOf(10, 30, 20, 60)) // Match the size of dayLabels (7 days)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BarGraphScreenPreview() {
+    BarGraphScreen()
 }

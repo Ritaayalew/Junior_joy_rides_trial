@@ -62,6 +62,7 @@ class BasicInterviewListRepoImpl(
     }
 
     override suspend fun getSingleBasicInterviewItemById(id: Int): BasicInterviewItem? {
+        getAllBasicInterviewsFromRemote()
         return dao.getSingleBasicInterviewItemById(id)?.toBasicInterviewItem()
     }
 

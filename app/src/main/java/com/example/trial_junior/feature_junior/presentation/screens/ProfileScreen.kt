@@ -92,11 +92,9 @@ fun ProfileScreen(
     var isMenuOpen by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    // Fetch user profile data
+    // Fetch user profile data and items on initial load and after navigation
     LaunchedEffect(Unit) {
-        if (user == null) {
-            userViewModel.getMyProfile()
-        }
+        userViewModel.getMyProfile()
     }
 
     // Listen for snackbar events from UserViewModel
@@ -117,7 +115,8 @@ fun ProfileScreen(
         LazyColumn(
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(bottom = 16.dp), // Added bottom padding
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -134,8 +133,6 @@ fun ProfileScreen(
                         Image(
                             painter = rememberAsyncImagePainter(
                                 model = user.backgroundImageUrl,
-                                placeholder = painterResource(id = R.drawable.profile),
-                                error = painterResource(id = R.drawable.profile)
                             ),
                             contentDescription = "Background Image",
                             modifier = Modifier
@@ -236,7 +233,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("invitation_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.InvitationScreen.route + "?invitationId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -260,7 +259,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("basic_interview_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.BasicInterviewScreen.route + "?basicInterviewId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -284,7 +285,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("special_interview_edit/${item.id}")
+                                navController.navigate(
+                                    Screen.SpecialInterviewScreen.route + "?specialInterviewId=${item.id}"
+                                )
                             }
                         )
                     }
@@ -308,7 +311,9 @@ fun ProfileScreen(
                                 }
                             },
                             onEditClick = {
-                                navController.navigate("${Screen.WishListUpdateScreen.route}?wishListId=${item.id}")
+                                navController.navigate(
+                                    Screen.WishListScreen.route + "?wishListId=${item.id}"
+                                )
                             }
                         )
                     }

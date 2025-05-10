@@ -7,6 +7,8 @@ sealed class Screen(val route: String) {
     object ExampleScreen: Screen("example_screen")
     object WishListUpdateScreen: Screen("wishList_update_screen")
 
+
+
     object SignupScreen: Screen("signup_screen")
     object LoginScreen: Screen("login_screen")
     object ProfileScreen: Screen("profile_screen")
@@ -14,10 +16,13 @@ sealed class Screen(val route: String) {
     object AdminLoginScreen: Screen("admin_login_screen")
     object AdminDashboardScreen: Screen("admin_dashboard_screen")
 
+    object BasicInterviewScreen: Screen("basic_interview_screen")
+    object SpecialInterviewScreen: Screen("special_interview_screen")
+    object WishListScreen: Screen("wish_list_screen")
+    object InvitationScreen: Screen("invitation_screen")
 
-    object BasicInterviewScreen: Screen("BasicInterview_form")
-    object TalentShowScreen: Screen("TalentShow_form")
-    object InvitationScreen: Screen("Invitation_form")
-    object WishListScreen: Screen("WishList_form")
+    object PrivacyAndPolicyScreen: Screen("privacy_and_policy_screen")
+
+
 
 }

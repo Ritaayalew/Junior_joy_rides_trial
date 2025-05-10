@@ -26,7 +26,6 @@ import com.example.trial_junior.feature_junior.presentation.components.BasicInte
 import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.components.SortingDrawerOptions
 import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCardAdmin
-
 import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewEvent

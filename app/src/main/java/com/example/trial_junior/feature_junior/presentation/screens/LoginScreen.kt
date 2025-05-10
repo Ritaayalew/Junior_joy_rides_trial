@@ -1,5 +1,6 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
@@ -32,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,12 +44,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.trial_junior.feature_junior.presentation.util.Screen
@@ -70,6 +76,7 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
 
     Column(
         modifier = Modifier
+            .background(Color.White)
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
@@ -99,15 +106,28 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
+            placeholder = { Text("Enter your email", color = Color.Black, fontSize = 16.sp) },
             leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Email") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+            shape = RoundedCornerShape(30),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier.fillMaxWidth().shadow(elevation = 4.dp)
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
+            placeholder = { Text("Enter your password", color = Color.Black, fontSize = 16.sp) },
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
             trailingIcon = {
                 val image = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -117,8 +137,19 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
                 }
             },
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+            shape = RoundedCornerShape(30),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier.fillMaxWidth().shadow(elevation = 4.dp)
         )
 
         // Error Display Below Password Field
