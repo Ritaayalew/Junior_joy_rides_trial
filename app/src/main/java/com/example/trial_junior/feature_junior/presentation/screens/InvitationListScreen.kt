@@ -22,14 +22,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.trial_junior.core.util.ContentDescriptions
 import com.example.trial_junior.core.util.ListStrings
-import com.example.trial_junior.feature_junior.presentation.components.BasicInterviewItemCard
 import com.example.trial_junior.feature_junior.presentation.components.BasicInterviewItemCardAdmin
-import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCard
 import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.components.SortingDrawerOptions
-import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCard
 import com.example.trial_junior.feature_junior.presentation.components.SpecialInterviewItemCardAdmin
-import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCard
+
 import com.example.trial_junior.feature_junior.presentation.components.WishlistItemCardAdmin
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewEvent
