@@ -1,11 +1,13 @@
 package com.example.trial_junior.feature_junior.presentation.util
 
 sealed class Screen(val route: String) {
-//    object InvitationItemListScreen: Screen("invitationItemList_screen")
-//    object InvitationNewUpdateScreen: Screen("invitationNewUpdate_screen")
-//
-//    object ExampleScreen: Screen("example_screen")
-//    object WishListUpdateScreen: Screen("wishList_update_screen")
+    object InvitationItemListScreen: Screen("invitationItemList_screen")
+    object InvitationNewUpdateScreen: Screen("invitationNewUpdate_screen")
+
+    object ExampleScreen: Screen("example_screen")
+    object WishListUpdateScreen: Screen("wishList_update_screen")
+
+
 
     object SignupScreen: Screen("signup_screen")
     object LoginScreen: Screen("login_screen")
@@ -19,6 +21,7 @@ sealed class Screen(val route: String) {
     object WishListScreen: Screen("wish_list_screen")
     object InvitationScreen: Screen("invitation_screen")
 
+    object PrivacyAndPolicyScreen: Screen("privacy_and_policy_screen")
 
 
 

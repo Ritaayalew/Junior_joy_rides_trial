@@ -92,11 +92,9 @@ fun ProfileScreen(
     var isMenuOpen by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    // Fetch user profile data
+    // Fetch user profile data and items on initial load and after navigation
     LaunchedEffect(Unit) {
-        if (user == null) {
-            userViewModel.getMyProfile()
-        }
+        userViewModel.getMyProfile()
     }
 
     // Listen for snackbar events from UserViewModel
@@ -117,7 +115,8 @@ fun ProfileScreen(
         LazyColumn(
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(bottom = 16.dp), // Added bottom padding
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {

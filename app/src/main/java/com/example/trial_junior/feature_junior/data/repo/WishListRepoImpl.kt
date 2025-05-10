@@ -62,6 +62,7 @@ class WishListRepoImpl(
     }
 
     override suspend fun getSingleWishListItemById(id: Int): WishListItem? {
+        getAllWishListItemsFromRemote()
         return dao.getSingleWishListItemById(id)?.toWishListItem()
     }
 

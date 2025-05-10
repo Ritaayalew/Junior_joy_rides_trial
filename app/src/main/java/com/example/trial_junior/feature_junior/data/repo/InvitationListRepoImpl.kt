@@ -62,6 +62,7 @@ class InvitationListRepoImpl @Inject constructor(
     }
 
     override suspend fun getSingleInvitationItemById(id: Int): InvitationItem? {
+        getAllInvitationsFromRemote()
         return dao.getSingleInvitationItemById(id)?.toInvitationItem()
     }
 

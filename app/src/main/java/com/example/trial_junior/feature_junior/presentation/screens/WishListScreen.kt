@@ -4,38 +4,145 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.WishList_Update.WishListNewUpdateEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.WishList_Update.WishListNewUpdateViewModel
+import com.example.trial_junior.feature_junior.presentation.components.HintInputField
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
-fun WishListScreen(viewModel: WishListNewUpdateViewModel= hiltViewModel()) {
+fun WishListScreen(navController: NavHostController, viewModel: WishListNewUpdateViewModel = hiltViewModel()) {
+    val (currentForm, setCurrentForm) = rememberSaveable { mutableStateOf("wishlist") }
+    val defaultPadding = 16.dp
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                WishListNewUpdateViewModel.UiEvent.SaveWishList -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Form submitted successfully!")
+                        Toast.makeText(context, "Form submitted successfully!", Toast.LENGTH_SHORT).show()
+                        navController.navigateUp()
+                    }
+                }
+                is WishListNewUpdateViewModel.UiEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Submission failed: ${event.message}")
+                        Toast.makeText(context, "Submission failed: ${event.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                WishListNewUpdateViewModel.UiEvent.Back -> {
+                    navController.navigateUp()
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(defaultPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Birthday",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(vertical = 5.dp),
+        )
+
+        Divider(
+            color = Color.Gray,
+            thickness = 1.dp,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .padding(0.dp)
+        )
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Invite Etopis",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black,
+                modifier = Modifier.clickable { navController.navigate(Screen.InvitationScreen.route) }
+            )
+            Text(
+                text = "Wishlist",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black,
+                modifier = Modifier.clickable { setCurrentForm("wishlist") }
+            )
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Button(
+                modifier = Modifier.weight(1f).height(8.dp),
+                onClick = { },
+                colors = if (currentForm == "invitation") {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
+                } else {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3))
+                }
+            ) {}
+            Button(
+                modifier = Modifier.weight(1f).height(8.dp),
+                onClick = { },
+                colors = if (currentForm == "wishlist") {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
+                } else {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3))
+                }
+            ) {}
+        }
+
+        HorizontalDivider(modifier = Modifier.fillMaxWidth().height(2.dp))
+
+        WishList(viewModel = viewModel, snackbarHostState = snackbarHostState, navController = navController)
+    }
+}
+
+@Composable
+fun WishList(
+    viewModel: WishListNewUpdateViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
+    navController: NavHostController
+) {
     val context = LocalContext.current
     val state = viewModel.state.value
 
-    val (name, setName) = rememberSaveable { mutableStateOf(state.wishlist.childName) }
-    val (celebrationDate, setCelebrationDate) = rememberSaveable { mutableStateOf(state.wishlist.date) }
-    val (email, setEmail) = rememberSaveable { mutableStateOf(state.wishlist.guardianEmail) }
-    val (age, setAge) = rememberSaveable { mutableStateOf(state.wishlist.age) }
-    val (specialRequirement, setSpecialRequirement) = rememberSaveable { mutableStateOf(state.wishlist.specialRequests) }
-    val (imageUrl, setImageUrl) = rememberSaveable { mutableStateOf("") }
     val itemSpacing = 16.dp
 
     val launcher = rememberLauncherForActivityResult(
@@ -44,7 +151,6 @@ fun WishListScreen(viewModel: WishListNewUpdateViewModel= hiltViewModel()) {
         val uri = result.data?.data
         uri?.let {
             val uriString = it.toString()
-            setImageUrl(uriString)
             viewModel.onEvent(WishListNewUpdateEvent.EnteredImageUrl(uriString))
         }
     }
@@ -72,120 +178,157 @@ fun WishListScreen(viewModel: WishListNewUpdateViewModel= hiltViewModel()) {
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        Text(
-            "Join the Birthday Wishlist",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(Modifier.height(itemSpacing))
-
-        Text("Upload your child’s photo to be featured on our TV show this week!")
-
-        Spacer(Modifier.height(itemSpacing))
-
-        Text(
-            text = if (imageUrl.isEmpty()) "No image selected" else imageUrl,
-            fontSize = 14.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        Button(
-            onClick = openImagePicker,
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth(0.65f)
-                .height(100.dp)
-                .padding(start = 56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.LightGray
-            ),
-            shape = RoundedCornerShape(15.dp)
+                .background(Color.White)
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(paddingValues)
         ) {
-            Icon(
-                imageVector = Icons.Outlined.PhotoCamera,
-                contentDescription = "Select Image",
-                modifier = Modifier.size(32.dp),
-                tint = Color.Black
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-        }
+            item {
+                Text(
+                    text = "Join the Birthday Wishlist",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = itemSpacing)
+                )
+            }
 
-        Spacer(Modifier.height(itemSpacing))
+            item {
+                Text(
+                    text = "Upload your child’s photo to be featured on our TV show this week!",
+                    modifier = Modifier.padding(bottom = itemSpacing)
+                )
+            }
 
-        LoginTextField(
-            value = name,
-            labelText = "Child's Name",
-            onValueChange = {
-                setName(it)
-                viewModel.onEvent(WishListNewUpdateEvent.EnteredChildName(it))
-            },
-            readOnly = false
-        )
-        Spacer(Modifier.height(itemSpacing))
+            item {
+                Text(
+                    text = if (state.wishlist.imageUrl.isEmpty()) "No image selected" else state.wishlist.imageUrl,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
 
-        LoginTextField(
-            value = email,
-            labelText = "Guardian Email",
-            onValueChange = {
-                setEmail(it)
-                viewModel.onEvent(WishListNewUpdateEvent.EnteredGuardianEmail(it))
-            },
-            readOnly = false
-        )
-        Spacer(Modifier.height(itemSpacing))
+                Button(
+                    onClick = openImagePicker,
+                    modifier = Modifier
+                        .fillMaxWidth(0.65f)
+                        .height(100.dp)
+                        .padding(start = 56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.LightGray
+                    ),
+                    shape = RoundedCornerShape(15.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.PhotoCamera,
+                        contentDescription = "Select Image",
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Spacer(Modifier.height(itemSpacing))
+            }
 
-        LoginTextField(
-            value = age.toString(),
-            labelText = "Age",
-            onValueChange = {
-                val parsed = it.toIntOrNull() ?: 0
-                setAge(parsed)
-                viewModel.onEvent(WishListNewUpdateEvent.EnteredAge(parsed))
-            },
-            readOnly = false
-        )
-        Spacer(Modifier.height(itemSpacing))
+            item {
+                HintInputField(
+                    value = state.wishlist.childName,
+                    hint = "Child's Name",
+                    onValueChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.EnteredChildName(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.ChangedChildNameFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(itemSpacing))
+            }
 
-        LoginTextField(
-            value = celebrationDate,
-            labelText = "Date of Celebration",
-            onValueChange = {
-                setCelebrationDate(it)
-                viewModel.onEvent(WishListNewUpdateEvent.EnteredDate(it))
-            },
-            modifier = Modifier.clickable {
-                datePickerDialog.show()
-            },
-            readOnly = false
-        )
-        Spacer(Modifier.height(itemSpacing))
+            item {
+                HintInputField(
+                    value = state.wishlist.guardianEmail,
+                    hint = "Guardian Email",
+                    keyboardType = KeyboardType.Email,
+                    onValueChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.EnteredGuardianEmail(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.ChangedGuardianEmailFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(itemSpacing))
+            }
 
-        LoginTextField(
-            value = specialRequirement,
-            labelText = "Special Requirements",
-            onValueChange = {
-                setSpecialRequirement(it)
-                viewModel.onEvent(WishListNewUpdateEvent.EnteredSpecialRequests(it))
-            },
-            readOnly = false
-        )
+            item {
+                HintInputField(
+                    value = state.wishlist.age.takeIf { it > 0 }?.toString() ?: "",
+                    hint = "Age",
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = { input ->
+                        if (input.isEmpty() || input.all { it.isDigit() }) {
+                            val parsed = input.toIntOrNull() ?: 0
+                            viewModel.onEvent(WishListNewUpdateEvent.EnteredAge(parsed))
+                        }
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.ChangedAgeFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(itemSpacing))
+            }
 
-        Spacer(Modifier.height(itemSpacing))
+            item {
+                TextField(
+                    value = state.wishlist.date,
+                    onValueChange = {},
+                    placeholder = { Text("Date of Celebration", color = Color.Gray) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { datePickerDialog.show() },
+                    enabled = false,
+                    shape = RoundedCornerShape(percent = 30),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFE7E7E7),
+                        unfocusedContainerColor = Color(0xFFE7E7E7),
+                        disabledContainerColor = Color(0xFFE7E7E7),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
+                )
+                Spacer(Modifier.height(itemSpacing))
+            }
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                viewModel.onEvent(WishListNewUpdateEvent.SaveWishList)
-                Toast.makeText(context, "Submitted!", Toast.LENGTH_SHORT).show()
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
-        ) {
-            Text("Submit Request")
+            item {
+                HintInputField(
+                    value = state.wishlist.specialRequests,
+                    hint = "Special Requirements",
+                    onValueChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.EnteredSpecialRequests(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(WishListNewUpdateEvent.ChangedSpecialRequestsFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(itemSpacing))
+            }
+
+            item {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = itemSpacing),
+                    onClick = {
+                        viewModel.onEvent(WishListNewUpdateEvent.SaveWishList)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
+                ) {
+                    Text("Submit Request")
+                }
+            }
         }
     }
 }

@@ -1,62 +1,71 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
-
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.trial_junior.feature_junior.presentation.viewModels.Invitation_Update.InvitationNewUpdateEvent
 import com.example.trial_junior.feature_junior.presentation.viewModels.Invitation_Update.InvitationNewUpdateViewModel
-
-import androidx.compose.material3.TextField
-import androidx.compose.material3.Text
+import com.example.trial_junior.feature_junior.presentation.components.HintInputField
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.TextFieldDefaults
-
 import androidx.compose.ui.graphics.Color
-
-
-
-
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.navigation.NavHostController
+import com.example.trial_junior.feature_junior.presentation.util.Screen
 import java.util.Calendar
-//857120
+import java.util.Locale
 
 @Composable
-fun InvitationScreen() {
+fun InvitationScreen(navController: NavHostController, viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
     val (currentForm, setCurrentForm) = rememberSaveable { mutableStateOf("invitation") }
     val defaultPadding = 16.dp
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(defaultPadding),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(defaultPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Invitation",
+            text = "Birthday",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = defaultPadding)
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(vertical = 5.dp),
         )
+
+        Divider(
+            color = Color.Gray,
+            thickness = 1.dp,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .padding(0.dp)
+        )
+
+        Spacer(modifier = Modifier.height(18.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Invitation",
+                text = "Invite Etopis",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
@@ -67,61 +76,48 @@ fun InvitationScreen() {
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = Modifier.clickable { setCurrentForm("wishlist") }
+                modifier = Modifier.clickable { navController.navigate(Screen.WishListScreen.route) }
             )
         }
         Row(modifier = Modifier.fillMaxWidth()) {
             Button(
-                modifier = Modifier.weight(1f).height(8.dp), // Adjust height for better visibility
+                modifier = Modifier.weight(1f).height(8.dp),
                 onClick = { },
                 colors = if (currentForm == "invitation") {
-                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D)) // Gold
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
                 } else {
-                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3)) // Light Grey
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3))
                 }
-            ) {
-
-            }
-
+            ) {}
             Button(
-                modifier = Modifier.weight(1f).height(8.dp), // Same weight for equal width
+                modifier = Modifier.weight(1f).height(8.dp),
                 onClick = { },
                 colors = if (currentForm == "wishlist") {
-                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D)) // Gold
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
                 } else {
-                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3)) // Light Grey
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFD3D3D3))
                 }
-            ) {
-
-            }
+            ) {}
         }
 
-        Divider(modifier = Modifier.fillMaxWidth().height(2.dp))
+        HorizontalDivider(modifier = Modifier.fillMaxWidth().height(2.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when (currentForm) {
-            "wishlist" -> WishListScreen(viewModel = hiltViewModel()) // Passing the viewModel here
-            else -> Invitation(viewModel = hiltViewModel()) // Also passing the viewModel here
-        }
-
-
+        Invitation(viewModel = viewModel)
     }
 }
 
-
-
 @Composable
-fun Invitation(viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
+fun Invitation(viewModel: InvitationNewUpdateViewModel) {
     val state = viewModel.state.value
     val context = LocalContext.current
     val spacing = 16.dp
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val calendar = remember { Calendar.getInstance() }
 
     // Date Picker Dialog
     val datePickerDialog = remember {
-        DatePickerDialog (
+        DatePickerDialog(
             context,
             { _, year, month, day ->
                 val selectedDate = "${year}-${month + 1}-${day}"
@@ -148,13 +144,15 @@ fun Invitation(viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
     }
 
     // Event collector
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
             when (event) {
                 is InvitationNewUpdateViewModel.UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar("Submission failed: ${event.message}")
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
                 InvitationNewUpdateViewModel.UiEvent.SaveInvitation -> {
+                    snackbarHostState.showSnackbar("Successfully submitted!")
                     Toast.makeText(context, "Invitation saved!", Toast.LENGTH_SHORT).show()
                 }
                 InvitationNewUpdateViewModel.UiEvent.Back -> {
@@ -164,140 +162,174 @@ fun Invitation(viewModel: InvitationNewUpdateViewModel = hiltViewModel()) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Book a Mascot",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(bottom = spacing)
-        )
-
-        LoginTextField(
-            value = state.invitation.childName,
-            labelText = "Child's Name",
-            onValueChange = {
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredChildName(it))
-            },
-            readOnly = true
-        )
-        Spacer(Modifier.height(spacing))
-        LoginTextField(
-            value = state.invitation.guardianEmail,
-            labelText = "Guardian Email",
-            onValueChange = {
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredGuardianEmail(it))
-            },
-            readOnly = true
-        )
-        Spacer(Modifier.height(spacing))
-        LoginTextField(
-            value = state.invitation.guardianPhone.takeIf { it > 0 }?.toString() ?: "",
-            labelText = "Phone Number",
-            onValueChange = { input ->
-                val parsed = input.filter { it.isDigit() }.toLongOrNull() ?: 0L
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredGuardianPhone(parsed))
-            },
-            readOnly = false
-        )
-
-
-        Spacer(Modifier.height(spacing))
-        LoginTextField(
-            value = state.invitation.address,
-            labelText = "Address",
-            onValueChange = {
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredAddress(it))
-            },
-            readOnly = true
-        )
-        Spacer(Modifier.height(spacing))
-
-        // 📅 Date Field with Dialog Trigger
-        TextField(
-            value = state.invitation.date,
-            onValueChange = {}, // No-op
-            label = { Text("Date") },
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-
-                .clickable { datePickerDialog.show()
-                    },
-            enabled = false,
-
-            shape = RoundedCornerShape(percent = 30),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFFE7E7E7), // Light grey
-                unfocusedContainerColor = Color(0xFFE7E7E7),
-                disabledContainerColor = Color(0xFFE7E7E7),
-                focusedIndicatorColor = Color.Transparent, // Removes outline when focused
-                unfocusedIndicatorColor = Color.Transparent, // Removes outline when unfocused
-                disabledIndicatorColor = Color.Transparent // Removes outline when disabled
-            )
-
-        )
-        Spacer(Modifier.height(spacing))
-
-// ⏰ Time Field with Dialog Trigger
-        TextField(
-            value = formatTime(state.invitation.time),
-            onValueChange = {},
-            label = { Text("Time") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { timePickerDialog.show() }
-
-                , // Apply same radius for the shape
-            enabled = false,
-            shape = RoundedCornerShape(percent = 30),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFFE7E7E7), // Light grey
-                unfocusedContainerColor = Color(0xFFE7E7E7),
-                disabledContainerColor = Color(0xFFE7E7E7),
-                focusedIndicatorColor = Color.Transparent, // Removes outline when focused
-                unfocusedIndicatorColor = Color.Transparent, // Removes outline when unfocused
-                disabledIndicatorColor = Color.Transparent // Removes outline when disabled
-            )
-        )
-
-
-        Spacer(Modifier.height(spacing))
-
-        LoginTextField(
-            value = state.invitation.age.toString(),
-            labelText = "Child's Age",
-            onValueChange = {
-                val parsed = it.toIntOrNull() ?: 0
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredAge(parsed))
-            },
-            readOnly = true
-        )
-        Spacer(Modifier.height(spacing))
-
-        LoginTextField(
-            value = state.invitation.specialRequests,
-            labelText = "Special Requests",
-            onValueChange = {
-                viewModel.onEvent(InvitationNewUpdateEvent.EnteredSpecialRequests(it))
-            },
-            readOnly = true
-        )
-        Spacer(Modifier.height(spacing))
-
-        Button(
-            onClick = {
-                viewModel.onEvent(InvitationNewUpdateEvent.SaveInvitation)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = spacing),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
+                .background(Color.White)
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(paddingValues)
         ) {
-            Text("Submit Request")
+            item {
+                Text(
+                    text = "Book a Mascot",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = spacing)
+                )
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.childName,
+                    hint = "Child's Name",
+                    onValueChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredChildName(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedChildNameFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.guardianEmail,
+                    hint = "Guardian Email",
+                    keyboardType = KeyboardType.Email,
+                    onValueChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredGuardianEmail(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedGuardianEmailFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.guardianPhone.takeIf { it > 0 }?.toString() ?: "",
+                    hint = "Phone Number",
+                    keyboardType = KeyboardType.Phone,
+                    onValueChange = { input ->
+                        val parsed = input.filter { it.isDigit() }.toLongOrNull() ?: 0L
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredGuardianPhone(parsed))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedGuardianPhoneFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.address,
+                    hint = "Address",
+                    onValueChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredAddress(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedAddressFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                // 📅 Date Field with Dialog Trigger
+                TextField(
+                    value = state.invitation.date,
+                    onValueChange = {},
+                    placeholder = { Text("Date", color = Color.Gray) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { datePickerDialog.show() },
+                    enabled = false,
+                    shape = RoundedCornerShape(percent = 30),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFE7E7E7),
+                        unfocusedContainerColor = Color(0xFFE7E7E7),
+                        disabledContainerColor = Color(0xFFE7E7E7),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                // ⏰ Time Field with Dialog Trigger
+                TextField(
+                    value = formatTime(state.invitation.time),
+                    onValueChange = {},
+                    placeholder = { Text("Time", color = Color.Gray) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { timePickerDialog.show() },
+                    enabled = false,
+                    shape = RoundedCornerShape(percent = 30),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFE7E7E7),
+                        unfocusedContainerColor = Color(0xFFE7E7E7),
+                        disabledContainerColor = Color(0xFFE7E7E7),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.age.takeIf { it > 0 }?.toString() ?: "",
+                    hint = "Child's Age",
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = {
+                        val parsed = it.toIntOrNull() ?: 0
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredAge(parsed))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedAgeFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                HintInputField(
+                    value = state.invitation.specialRequests,
+                    hint = "Special Requests",
+                    onValueChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.EnteredSpecialRequests(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.ChangedSpecialRequestsFocus(it))
+                    }
+                )
+                Spacer(Modifier.height(spacing))
+            }
+
+            item {
+                Button(
+                    onClick = {
+                        viewModel.onEvent(InvitationNewUpdateEvent.SaveInvitation)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = spacing),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC5AE3D))
+                ) {
+                    Text("Submit Request")
+                }
+            }
         }
     }
 }
@@ -309,12 +341,6 @@ fun formatTime(millis: Long): String {
     }
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
-    return String.format("%02d:%02d", hour, minute)
+    return String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
 }
 
-
-@Preview(showSystemUi = true)
-@Composable
-fun PrevInvitation() {
-    InvitationScreen()
-}

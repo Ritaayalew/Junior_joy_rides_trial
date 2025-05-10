@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.trial_junior.R
+import com.example.trial_junior.feature_junior.presentation.util.Screen
 
 @Composable
 fun MenuHeader() {
@@ -174,15 +175,15 @@ fun HalfScreenMenu(
                     }
 
                     "birthday" -> {
-                        // navController.navigate("birthday_route")
+                        navController.navigate(Screen.InvitationScreen.route)
                     }
 
                     "interview" -> {
-                        // navController.navigate("interview_route")
+                        navController.navigate(Screen.BasicInterviewScreen.route)
                     }
 
                     "profile" -> {
-                        // navController.navigate("profile_route")
+                        navController.navigate(Screen.ProfileScreen.route)
                     }
                 }
             }

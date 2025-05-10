@@ -21,6 +21,7 @@ import com.example.trial_junior.feature_junior.presentation.screens.BasicIntervi
 import com.example.trial_junior.feature_junior.presentation.screens.EditProfileScreen
 import com.example.trial_junior.feature_junior.presentation.screens.InvitationScreen
 import com.example.trial_junior.feature_junior.presentation.screens.LoginScreen
+import com.example.trial_junior.feature_junior.presentation.screens.PrivacyAndPolicyScreen
 import com.example.trial_junior.feature_junior.presentation.screens.ProfileScreen
 import com.example.trial_junior.feature_junior.presentation.screens.SignupScreen
 import com.example.trial_junior.feature_junior.presentation.screens.SpecialInterviewScreen
@@ -82,6 +83,9 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier
                             )
                         }
+                        composable(route = Screen.PrivacyAndPolicyScreen.route) {
+                            PrivacyAndPolicyScreen()
+                        }
                         composable(route = Screen.ProfileScreen.route) {
                             ProfileScreen(
                                 navController = navController,
@@ -109,7 +113,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            WishListScreen()
+                            WishListScreen(navController = navController,)
                         }
                         composable(
                             route = Screen.BasicInterviewScreen.route + "?basicInterviewId={basicInterviewId}",
@@ -122,7 +126,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            BasicInterviewScreen()
+                            BasicInterviewScreen(navController = navController,)
                         }
                         composable(
                             route = Screen.SpecialInterviewScreen.route + "?specialInterviewId={specialInterviewId}",
@@ -135,7 +139,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            SpecialInterviewScreen()
+                            SpecialInterviewScreen(navController = navController,)
                         }
                         composable(
                             route = Screen.InvitationScreen.route + "?invitationId={invitationId}",
@@ -148,7 +152,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            InvitationScreen()
+                            InvitationScreen(navController = navController)
                         }
 
 

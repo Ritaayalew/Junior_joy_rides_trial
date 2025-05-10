@@ -45,12 +45,15 @@ class BasicInterviewNewUpdateViewModel @Inject constructor(
         object Back : UiEvent()
     }
 
+
     init {
         savedStateHandle.get<Int>("basicInterviewId")?.let { id ->
             if (id != -1) {
+                println("Fetching BasicInterview with id: $id") // Debug log
                 viewModelScope.launch(dispatcher + errorHandler) {
                     basicInterviewUseCases.getBasicInterviewItemById(id)?.also { basicInterview ->
                         currentBasicInterviewId = id
+                        println("Fetched BasicInterview: $basicInterview") // Debug log
                         _state.value = _state.value.copy(
                             basicInterview = basicInterview,
                             isLoading = false,
@@ -61,15 +64,43 @@ class BasicInterviewNewUpdateViewModel @Inject constructor(
                             isGuardianEmailHintVisible = basicInterview.guardianEmail.isBlank(),
                             isSpecialRequestsHintVisible = basicInterview.specialRequests.isBlank()
                         )
+                    } ?: run {
+                        println("No BasicInterview found for id: $id") // Debug log
+                        _state.value = _state.value.copy(isLoading = false)
                     }
                 }
             } else {
-                _state.value = _state.value.copy(
-                    isLoading = false
-                )
+                println("basicInterviewId is -1, creating new entry") // Debug log
+                _state.value = _state.value.copy(isLoading = false)
             }
         }
     }
+
+//    init {
+//        savedStateHandle.get<Int>("basicInterviewId")?.let { id ->
+//            if (id != -1) {
+//                viewModelScope.launch(dispatcher + errorHandler) {
+//                    basicInterviewUseCases.getBasicInterviewItemById(id)?.also { basicInterview ->
+//                        currentBasicInterviewId = id
+//                        _state.value = _state.value.copy(
+//                            basicInterview = basicInterview,
+//                            isLoading = false,
+//                            isChildNameHintVisible = basicInterview.childName.isBlank(),
+//                            isGuardianNameHintVisible = basicInterview.guardianName.isBlank(),
+//                            isGuardianPhoneHintVisible = basicInterview.guardianPhone <= 0,
+//                            isAgeHintVisible = basicInterview.age <= 0,
+//                            isGuardianEmailHintVisible = basicInterview.guardianEmail.isBlank(),
+//                            isSpecialRequestsHintVisible = basicInterview.specialRequests.isBlank()
+//                        )
+//                    }
+//                }
+//            } else {
+//                _state.value = _state.value.copy(
+//                    isLoading = false
+//                )
+//            }
+//        }
+//    }
 
     fun onEvent(event: BasicInterviewNewUpdateEvent) {
         when (event) {
