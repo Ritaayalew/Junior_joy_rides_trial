@@ -96,3 +96,4 @@ sealed class InvitationListEvent {
     data class ToggleHosted(val invitation: InvitationItem) : InvitationListEvent()
     data class ToggleApproved(val invitation: InvitationItem) : InvitationListEvent()
 }
+

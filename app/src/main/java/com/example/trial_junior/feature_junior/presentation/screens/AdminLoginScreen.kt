@@ -1,5 +1,6 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -86,6 +89,7 @@ fun AdminLoginScreen(navController: NavHostController, viewModel: UserViewModel 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White) // Set background to white
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,7 +109,7 @@ fun AdminLoginScreen(navController: NavHostController, viewModel: UserViewModel 
             style = TextStyle(
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFFC5AE3D)
+                color = Color.Black
             ),
             modifier = Modifier.align(Alignment.Start)
                 .padding(bottom = 5.dp),
@@ -122,8 +126,19 @@ fun AdminLoginScreen(navController: NavHostController, viewModel: UserViewModel 
             onValueChange = { email = it },
             label = { Text("Admin Email") },
             leadingIcon = { Icon(Icons.Filled.MailOutline, contentDescription = "Admin Email") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 6.dp)
+                .shadow(elevation = 4.dp),
+            shape = RoundedCornerShape(percent = 30),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
         OutlinedTextField(
@@ -139,8 +154,19 @@ fun AdminLoginScreen(navController: NavHostController, viewModel: UserViewModel 
                 }
             },
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 6.dp)
+                .shadow(elevation = 4.dp),
+            shape = RoundedCornerShape(percent = 30),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFE7E7E7),
+                unfocusedContainerColor = Color(0xFFE7E7E7),
+                disabledContainerColor = Color(0xFFE7E7E7),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
         Surface(

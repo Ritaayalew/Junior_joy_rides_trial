@@ -46,7 +46,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
     // Navigate on successful signup
     LaunchedEffect(state.user) {
         if (state.user != null) {
-            navController.navigate(Screen.ProfileScreen.route) {
+            navController.navigate(Screen.LandingScreen.route) {
                 popUpTo(Screen.SignupScreen.route) { inclusive = true }
             }
             viewModel.resetState() // Reset state after navigation
@@ -62,7 +62,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = "Sign up",
             style = TextStyle(
@@ -74,7 +74,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
                 .padding(top = 5.dp),
         )
         Divider(
-            color = Color.Gray,
+            color = Color.Black,
             thickness = 1.dp,
             modifier = Modifier
                 .padding(vertical = 8.dp)
@@ -100,7 +100,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             shape = RoundedCornerShape(percent = 30),
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 6.dp),
+                .shadow(elevation = 4.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFE7E7E7),
                 unfocusedContainerColor = Color(0xFFE7E7E7),
@@ -119,7 +119,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             shape = RoundedCornerShape(percent = 30),
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 6.dp),
+                .shadow(elevation = 4.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFE7E7E7),
                 unfocusedContainerColor = Color(0xFFE7E7E7),
@@ -139,7 +139,7 @@ fun SignupScreen(navController: NavHostController, viewModel: UserViewModel = hi
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 6.dp),
+                .shadow(elevation = 4.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFE7E7E7),
                 unfocusedContainerColor = Color(0xFFE7E7E7),

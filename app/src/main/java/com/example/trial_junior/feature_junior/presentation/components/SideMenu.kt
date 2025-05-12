@@ -9,16 +9,17 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Interests
-import androidx.compose.material.icons.filled.YoutubeSearchedFor
+import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,12 +46,11 @@ fun MenuHeader() {
         Text(text = "Full Name", fontSize = 20.sp, fontWeight = FontWeight.Bold)
     }
 }
-
 data class MenuItem(
     val id: String,
     val title: String,
     val contentDescription: String,
-    val iconResourceId: Int // Use resource ID for icons
+    val icon: ImageVector,
 )
 
 @Composable
@@ -73,7 +73,7 @@ fun MenuBody(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = item.iconResourceId),
+                    imageVector = item.icon,
                     contentDescription = item.contentDescription,
                     tint = Color.Gray
                 )
@@ -100,21 +100,21 @@ fun MenuBody(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { }) {
                 Icon(
-                    imageVector = Icons.Default.YoutubeSearchedFor,// Ensure this drawable exists
+                    painter = painterResource(id = R.drawable.ic_youtube),
                     contentDescription = "YouTube"
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {  }) {
                 Icon(
-                    imageVector = Icons.Default.Interests, // Ensure this drawable exists
+                    painter = painterResource(id = R.drawable.ic_instagram),
                     contentDescription = "Instagram"
                 )
             }
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(id = android.R.drawable.ic_menu_call), // Using a system icon as a placeholder
+                    painter = painterResource(id = android.R.drawable.ic_menu_call),
                     contentDescription = "Phone",
                     tint = Color.Gray
                 )
@@ -128,12 +128,12 @@ fun HalfScreenMenu(
     navController: NavHostController,
     isMenuOpen: androidx.compose.runtime.MutableState<Boolean>,
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit // Add the onDismiss callback here
+    onDismiss: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .widthIn(max = 300.dp) // Adjust width as needed
+            .widthIn(max = 300.dp)
             .background(Color.White)
     ) {
         MenuHeader()
@@ -143,35 +143,35 @@ fun HalfScreenMenu(
                     id = "home",
                     title = "Home",
                     contentDescription = "Go to home screen",
-                    iconResourceId = android.R.drawable.ic_menu_compass // Placeholder system icon
+                    icon = Icons.Default.Home
                 ),
                 MenuItem(
                     id = "birthday",
                     title = "Birthday",
                     contentDescription = "View birthdays",
-                    iconResourceId = R.drawable.icon // Ensure this drawable exists
+                    icon = Icons.Default.CardGiftcard
                 ),
                 MenuItem(
                     id = "interview",
                     title = "Interview",
                     contentDescription = "Schedule interview",
-                    iconResourceId = android.R.drawable.ic_menu_camera // Placeholder system icon
+                    icon = Icons.Default.Videocam
                 ),
                 MenuItem(
                     id = "profile",
                     title = "Profile",
                     contentDescription = "View profile",
-                    iconResourceId = android.R.drawable.ic_menu_manage // Placeholder system icon
+                    icon = Icons.Default.Person
+
                 ),
             ),
             onItemClick = { menuItem ->
                 Log.d("Menu Item Clicked", menuItem.title)
                 isMenuOpen.value = false
-                onDismiss() // Call the onDismiss callback when an item is clicked
-                // Handle navigation here if needed
+                onDismiss()
                 when (menuItem.id) {
                     "home" -> {
-                        // navController.navigate("home_route")
+                        navController.navigate(Screen.LandingScreen.route)
                     }
 
                     "birthday" -> {

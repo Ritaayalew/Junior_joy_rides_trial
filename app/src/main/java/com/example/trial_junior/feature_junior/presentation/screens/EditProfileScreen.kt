@@ -33,6 +33,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -60,6 +61,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.trial_junior.R
+import com.example.trial_junior.feature_junior.presentation.components.AppBottomNavigation
 import com.example.trial_junior.feature_junior.presentation.components.HalfScreenMenu
 import com.example.trial_junior.feature_junior.presentation.util.Screen
 import com.example.trial_junior.feature_junior.presentation.viewModels.UserUiEvent
@@ -162,379 +164,383 @@ fun EditProfileScreen(navController: NavHostController, viewModel: UserViewModel
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(bottom = 56.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            item {
-                if (state.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(170.dp)
-                        .background(Color.Gray), // Always set the gray background
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Overlay background image if available
-                    if (backgroundImageUri != null) {
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigation(navController = navController)
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    if (state.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(170.dp)
+                            .background(Color.Gray),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Overlay background image if available
+                        if (backgroundImageUri != null) {
+                            Image(
+                                painter = rememberAsyncImagePainter(
+                                    model = backgroundImageUri,
+                                ),
+                                contentDescription = "Background Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(170.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        // Always show profile image (default or selected)
                         Image(
-                            painter = rememberAsyncImagePainter(
-                                model = backgroundImageUri,
-                            ),
-                            contentDescription = "Background Image",
+                            painter = if (profileImageUri != null) {
+                                rememberAsyncImagePainter(
+                                    model = profileImageUri,
+                                    placeholder = painterResource(id = R.drawable.profile),
+                                    error = painterResource(id = R.drawable.profile)
+                                )
+                            } else {
+                                painterResource(id = R.drawable.profile)
+                            },
+                            contentDescription = "Profile Image",
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(170.dp),
+                                .size(120.dp)
+                                .absoluteOffset(y = 95.dp)
+                                .clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
                     }
-                    // Always show profile image (default or selected)
-                    Image(
-                        painter = if (profileImageUri != null) {
-                            rememberAsyncImagePainter(
-                                model = profileImageUri,
-                                placeholder = painterResource(id = R.drawable.profile),
-                                error = painterResource(id = R.drawable.profile)
-                            )
-                        } else {
-                            painterResource(id = R.drawable.profile)
-                        },
-                        contentDescription = "Profile Image",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .absoluteOffset(y = 95.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                    Spacer(modifier = Modifier.height(60.dp))
+                    Text(
+                        text = firstName.ifEmpty { "Full Name" },
+                        fontSize = 26.sp,
+                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp)
                     )
-                }
-                Spacer(modifier = Modifier.height(60.dp))
-                Text(
-                    text = firstName.ifEmpty { "Full Name" },
-                    fontSize = 26.sp,
-                    color = Color.Black,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp)
-                )
-                Text(
-                    text = email.ifEmpty { "name@gmail.com" },
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                    Text(
+                        text = email.ifEmpty { "name@gmail.com" },
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
 
-                Spacer(modifier = Modifier.height(40.dp))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = 40.dp,
-                            vertical = 8.dp
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = 40.dp,
+                                vertical = 8.dp
+                            )
+                            .shadow(elevation = 10.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8))
+                    ) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "First Name",
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(horizontal = 10.dp)
                         )
-                        .shadow(elevation = 10.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F8F8))
-                ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "First Name",
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                    TextField(
-                        value = firstName,
-                        onValueChange = { firstName = it },
-                        label = { Text("Enter First Name") },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFFE5E4E4),
-                            unfocusedContainerColor = Color(0xFFE5E4E4),
-                            disabledContainerColor = Color(0xFFE5E4E4)
-                        ),
-                        singleLine = false,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = 10.dp,
-                                vertical = 8.dp
-                            )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Last Name",
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                    TextField(
-                        value = lastName,
-                        onValueChange = { lastName = it },
-                        label = { Text("Enter Last Name") },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFFE5E4E4),
-                            unfocusedContainerColor = Color(0xFFE5E4E4),
-                            disabledContainerColor = Color(0xFFE5E4E4)
-                        ),
-                        singleLine = false,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = 10.dp,
-                                vertical = 8.dp
-                            )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Email",
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                    TextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Enter Email") },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFFE5E4E4),
-                            unfocusedContainerColor = Color(0xFFE5E4E4),
-                            disabledContainerColor = Color(0xFFE5E4E4)
-                        ),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = 10.dp,
-                                vertical = 8.dp
-                            )
-                    )
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Box {
-                            Column(
-                                verticalArrangement = Arrangement.Top
-                            ) {
-                                Text("Profile ", fontSize = 20.sp)
-                                Text("Picture:", fontSize = 20.sp)
-                            }
-                        }
-
-                        Box {
-                            Column(
-                                verticalArrangement = Arrangement.Top
-                            ) {
-                                Text("Background", fontSize = 20.sp)
-                                Text("Picture:", fontSize = 20.sp)
-                            }
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Box(
+                        TextField(
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            label = { Text("Enter First Name") },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color(0xFFE5E4E4),
+                                unfocusedContainerColor = Color(0xFFE5E4E4),
+                                disabledContainerColor = Color(0xFFE5E4E4)
+                            ),
+                            singleLine = false,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                            shape = RoundedCornerShape(10.dp),
                             modifier = Modifier
-                                .size(120.dp)
-                                .background(Color(0xFFE5E4E4), shape = RoundedCornerShape(8.dp))
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(8.dp)
-                            ) {
-                                if (profileImageUri != null) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(
-                                            model = profileImageUri,
-                                            placeholder = painterResource(id = R.drawable.icon),
-                                            error = painterResource(id = R.drawable.icon)
-                                        ),
-                                        contentDescription = "Profile Image",
-                                        modifier = Modifier.size(40.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.icon),
-                                        contentDescription = "Default Profile Image",
-                                        modifier = Modifier.size(40.dp)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Button(
-                                    onClick = {
-                                        val permission = if (Build.VERSION.SDK_INT >= 33) {
-                                            Manifest.permission.READ_MEDIA_IMAGES
-                                        } else {
-                                            Manifest.permission.READ_EXTERNAL_STORAGE
-                                        }
-                                        permissionLauncher.launch(permission)
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDEDEDE)),
-                                    modifier = Modifier.height(30.dp)
-                                ) {
-                                    Text("BROWSE", fontSize = 12.sp, color = Color.Black)
-                                }
-                            }
-                        }
-
-                        Box(
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 10.dp,
+                                    vertical = 8.dp
+                                )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Last Name",
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        )
+                        TextField(
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            label = { Text("Enter Last Name") },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color(0xFFE5E4E4),
+                                unfocusedContainerColor = Color(0xFFE5E4E4),
+                                disabledContainerColor = Color(0xFFE5E4E4)
+                            ),
+                            singleLine = false,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                            shape = RoundedCornerShape(10.dp),
                             modifier = Modifier
-                                .size(120.dp)
-                                .background(Color(0xFFE5E4E4), shape = RoundedCornerShape(8.dp))
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 10.dp,
+                                    vertical = 8.dp
+                                )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Email",
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        )
+                        TextField(
+                            value = email,
+                            onValueChange = { email = it },
+                            label = { Text("Enter Email") },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color(0xFFE5E4E4),
+                                unfocusedContainerColor = Color(0xFFE5E4E4),
+                                disabledContainerColor = Color(0xFFE5E4E4)
+                            ),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 10.dp,
+                                    vertical = 8.dp
+                                )
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(8.dp)
-                            ) {
-                                if (backgroundImageUri != null) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(
-                                            model = backgroundImageUri,
-                                            placeholder = painterResource(id = R.drawable.icon),
-                                            error = painterResource(id = R.drawable.icon)
-                                        ),
-                                        contentDescription = "Background Image",
-                                        modifier = Modifier.size(40.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.icon),
-                                        contentDescription = "Default Background Image",
-                                        modifier = Modifier.size(40.dp)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Button(
-                                    onClick = {
-                                        val permission = if (Build.VERSION.SDK_INT >= 33) {
-                                            Manifest.permission.READ_MEDIA_IMAGES
-                                        } else {
-                                            Manifest.permission.READ_EXTERNAL_STORAGE
-                                        }
-                                        backgroundPermissionLauncher.launch(permission)
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDEDEDE)),
-                                    modifier = Modifier.height(30.dp)
+                            Box {
+                                Column(
+                                    verticalArrangement = Arrangement.Top
                                 ) {
-                                    Text("BROWSE", fontSize = 12.sp, color = Color.Black)
+                                    Text("Profile ", fontSize = 20.sp)
+                                    Text("Picture:", fontSize = 20.sp)
+                                }
+                            }
+
+                            Box {
+                                Column(
+                                    verticalArrangement = Arrangement.Top
+                                ) {
+                                    Text("Background", fontSize = 20.sp)
+                                    Text("Picture:", fontSize = 20.sp)
                                 }
                             }
                         }
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Button(
-                            onClick = {
-                                if (email.isNotEmpty()) {
-                                    viewModel.updateProfile(
-                                        email,
-                                        firstName,
-                                        lastName,
-                                        email,
-                                        null,
-                                        profileImageUri?.toString(),
-                                        backgroundImageUri?.toString()
-                                    )
-                                } else {
-                                    viewModel.setError("Email cannot be empty")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .background(Color(0xFFE5E4E4), shape = RoundedCornerShape(8.dp))
+                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(8.dp)
+                                ) {
+                                    if (profileImageUri != null) {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(
+                                                model = profileImageUri,
+                                                placeholder = painterResource(id = R.drawable.icon),
+                                                error = painterResource(id = R.drawable.icon)
+                                            ),
+                                            contentDescription = "Profile Image",
+                                            modifier = Modifier.size(40.dp),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.icon),
+                                            contentDescription = "Default Profile Image",
+                                            modifier = Modifier.size(40.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            val permission = if (Build.VERSION.SDK_INT >= 33) {
+                                                Manifest.permission.READ_MEDIA_IMAGES
+                                            } else {
+                                                Manifest.permission.READ_EXTERNAL_STORAGE
+                                            }
+                                            permissionLauncher.launch(permission)
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDEDEDE)),
+                                        modifier = Modifier.height(30.dp)
+                                    ) {
+                                        Text("BROWSE", fontSize = 12.sp, color = Color.Black)
+                                    }
                                 }
-                            },
-                            enabled = !state.isLoading,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF4CAF50)
-                            )
-                        ) {
-                            Text("Save", color = Color.White)
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .background(Color(0xFFE5E4E4), shape = RoundedCornerShape(8.dp))
+                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(8.dp)
+                                ) {
+                                    if (backgroundImageUri != null) {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(
+                                                model = backgroundImageUri,
+                                                placeholder = painterResource(id = R.drawable.icon),
+                                                error = painterResource(id = R.drawable.icon)
+                                            ),
+                                            contentDescription = "Background Image",
+                                            modifier = Modifier.size(40.dp),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.icon),
+                                            contentDescription = "Default Background Image",
+                                            modifier = Modifier.size(40.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            val permission = if (Build.VERSION.SDK_INT >= 33) {
+                                                Manifest.permission.READ_MEDIA_IMAGES
+                                            } else {
+                                                Manifest.permission.READ_EXTERNAL_STORAGE
+                                            }
+                                            backgroundPermissionLauncher.launch(permission)
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDEDEDE)),
+                                        modifier = Modifier.height(30.dp)
+                                    ) {
+                                        Text("BROWSE", fontSize = 12.sp, color = Color.Black)
+                                    }
+                                }
+                            }
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(
-                            onClick = { viewModel.onBack() },
-                            enabled = !state.isLoading,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFF44336)
-                            )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.Start
                         ) {
-                            Text("Cancel", color = Color.White)
+                            Button(
+                                onClick = {
+                                    if (email.isNotEmpty()) {
+                                        viewModel.updateProfile(
+                                            email,
+                                            firstName,
+                                            lastName,
+                                            email,
+                                            null,
+                                            profileImageUri?.toString(),
+                                            backgroundImageUri?.toString()
+                                        )
+                                    } else {
+                                        viewModel.setError("Email cannot be empty")
+                                    }
+                                },
+                                enabled = !state.isLoading,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF4CAF50)
+                                )
+                            ) {
+                                Text("Save", color = Color.White)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = { viewModel.onBack() },
+                                enabled = !state.isLoading,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFF44336)
+                                )
+                            ) {
+                                Text("Cancel", color = Color.White)
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Loading Indicator
-        if (state.isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            // Loading Indicator
+            if (state.isLoading) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
+            }
+
+            // Snackbar for error messages
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+
+            // Side Menu
+            if (isMenuOpen) {
+                HalfScreenMenu(
+                    navController = navController,
+                    isMenuOpen = remember { mutableStateOf(isMenuOpen) },
+                    modifier = Modifier,
+                    onDismiss = { isMenuOpen = false }
+                )
             }
         }
 
-        // Snackbar for error messages
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-
-        // Side Menu
-        if (isMenuOpen) {
-            HalfScreenMenu(
-                navController = navController,
-                isMenuOpen = remember { mutableStateOf(isMenuOpen) },
-                modifier = Modifier,
-                onDismiss = { isMenuOpen = false }
-            )
-        }
-    }
-
-    // Toggle menu
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        contentAlignment = Alignment.TopEnd
-    ) {
-        IconButton(onClick = { isMenuOpen = !isMenuOpen }) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Open Menu",
-                tint = Color.Black
-            )
+        // Toggle menu
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            IconButton(onClick = { isMenuOpen = !isMenuOpen }) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Open Menu",
+                    tint = Color.Black
+                )
+            }
         }
     }
 }
-
 
 
 

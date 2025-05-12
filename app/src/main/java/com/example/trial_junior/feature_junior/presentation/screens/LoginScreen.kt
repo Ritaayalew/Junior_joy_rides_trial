@@ -83,7 +83,7 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = "Login",
             style = TextStyle(
@@ -95,7 +95,7 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
                 .padding(bottom = 5.dp),
         )
         Divider(
-            color = Color.Gray,
+            color = Color.Black,
             thickness = 1.dp,
             modifier = Modifier
                 .padding(vertical = 8.dp)
@@ -258,7 +258,7 @@ fun LoginScreen(navController: NavHostController, viewModel: UserViewModel = hil
 }
 
 private fun onLoginSuccess(navController: NavHostController) {
-    navController.navigate(Screen.ProfileScreen.route) {
+    navController.navigate(Screen.LandingScreen.route) {
         popUpTo("login") { inclusive = true }
     }
 }

@@ -19,7 +19,9 @@ import com.example.trial_junior.feature_junior.presentation.screens.AdminDashboa
 import com.example.trial_junior.feature_junior.presentation.screens.AdminLoginScreen
 import com.example.trial_junior.feature_junior.presentation.screens.BasicInterviewScreen
 import com.example.trial_junior.feature_junior.presentation.screens.EditProfileScreen
+import com.example.trial_junior.feature_junior.presentation.screens.GetStartedScreen
 import com.example.trial_junior.feature_junior.presentation.screens.InvitationScreen
+import com.example.trial_junior.feature_junior.presentation.screens.LandingScreen
 import com.example.trial_junior.feature_junior.presentation.screens.LoginScreen
 import com.example.trial_junior.feature_junior.presentation.screens.PrivacyAndPolicyScreen
 import com.example.trial_junior.feature_junior.presentation.screens.ProfileScreen
@@ -57,8 +59,13 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.SignupScreen.route
+                        startDestination = Screen.GetStartedScreen.route
                     ) {
+                        composable(route = Screen.GetStartedScreen.route) {
+                            GetStartedScreen(
+                                navController = navController
+                            )
+                        }
                         composable(route = Screen.SignupScreen.route) {
                             SignupScreen(
                                 navController = navController,
@@ -80,11 +87,21 @@ class MainActivity : ComponentActivity() {
                         composable(route = Screen.AdminDashboardScreen.route) {
                             AdminDashboardScreen(
                                 navController = navController,
-                                modifier = Modifier
+                                modifier = Modifier,
+                                invitationViewModel = invitationViewModel,
+                                wishListViewModel = wishlistViewModel,
+                                basicInterviewViewModel = basicInterviewViewModel,
+                                specialInterviewViewModel = specialInterviewViewModel
                             )
                         }
                         composable(route = Screen.PrivacyAndPolicyScreen.route) {
                             PrivacyAndPolicyScreen()
+                        }
+                        composable(route = Screen.LandingScreen.route) {
+                            LandingScreen(
+                                navController = navController,
+                                modifier = Modifier
+                            )
                         }
                         composable(route = Screen.ProfileScreen.route) {
                             ProfileScreen(

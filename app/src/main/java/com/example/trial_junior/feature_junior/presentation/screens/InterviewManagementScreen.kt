@@ -1,6 +1,8 @@
 package com.example.trial_junior.feature_junior.presentation.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
@@ -19,184 +21,252 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem
+import com.example.trial_junior.feature_junior.domain.model.SpecialInterviewItem
 import com.example.trial_junior.feature_junior.presentation.viewModels.BasicInterviewListViewModel
+import com.example.trial_junior.feature_junior.presentation.viewModels.SpecialInterviewEvent
+import com.example.trial_junior.feature_junior.presentation.viewModels.SpecialInterviewListViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun InterviewManagementScreen(
     modifier: Modifier = Modifier,
-    basicViewModel: BasicInterviewListViewModel = hiltViewModel()
+    basicViewModel: BasicInterviewListViewModel = hiltViewModel(),
+    specialViewModel: SpecialInterviewListViewModel = hiltViewModel()
 ) {
-    val state by basicViewModel.state
+    val basicState by basicViewModel.state
+    val specialState by specialViewModel.state
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         basicViewModel.getItems()
+        specialViewModel.getItems()
     }
 
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
-
-        // --- Upcoming Interviews ---
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            shape = RoundedCornerShape(12.dp)
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Upcoming Interviews", style = MaterialTheme.typography.titleLarge)
+            item {
+                // --- Upcoming Interviews ---
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(vertical = 8.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Upcoming Interviews", style = MaterialTheme.typography.titleLarge)
 
-                when {
-                    state.isLoading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(top = 16.dp)
-                        )
-                    }
-
-                    state.error != null -> {
-                        Text(
-                            text = state.error ?: "An error occurred",
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    }
-
-                    else -> {
-                        val itemsToDisplay = state.items.filter { it.upcoming && !it.approved }
-
-                        if (itemsToDisplay.isEmpty()) {
-                            Text("No upcoming interviews available", modifier = Modifier.padding(top = 8.dp))
-                        } else {
-                            itemsToDisplay.forEach { interview ->
-                                BasicInterviewItemRow(interview)
-                                Divider(
-                                    modifier = Modifier.padding(vertical = 8.dp),
-                                    thickness = 1.dp,
-                                    color = MaterialTheme.colorScheme.onSurface
+                        when {
+                            basicState.isLoading -> {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 16.dp)
                                 )
+                            }
+
+                            basicState.error != null -> {
+                                Text(
+                                    text = basicState.error ?: "An error occurred",
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+
+                            else -> {
+                                val itemsToDisplay = basicState.items.filter { it.upcoming && !it.approved }
+
+                                if (itemsToDisplay.isEmpty()) {
+                                    Text("No upcoming interviews available", modifier = Modifier.padding(top = 8.dp))
+                                } else {
+                                    itemsToDisplay.forEach { interview ->
+                                        BasicInterviewItemRow(interview)
+                                        Divider(
+                                            modifier = Modifier.padding(vertical = 8.dp),
+                                            thickness = 1.dp,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // --- Videos for Approval ---
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .shadow(4.dp, shape = RectangleShape)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Videos for Approval", style = MaterialTheme.typography.titleLarge)
+            item {
+                // --- Videos for Approval ---
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(vertical = 8.dp)
+                        .shadow(4.dp, shape = RectangleShape)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Videos for Approval", style = MaterialTheme.typography.titleLarge)
 
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        VideoCard(
-                            name = "Elizabeth",
-                            age = 9,
-                            dateTime = "Sunday, 11:45AM",
-                            isApprovedSection = false,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp, top = 16.dp, bottom = 8.dp)
+                        // Debug: Show total and filtered item counts
+                        Text(
+                            text = "Total Special Items: ${specialState.items.size}",
+                            modifier = Modifier.padding(top = 8.dp),
+                            color = Color.Gray
                         )
-                        VideoCard(
-                            name = "Eliza",
-                            age = 10,
-                            dateTime = "Sunday, 09:45AM",
-                            isApprovedSection = false,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 8.dp, top = 16.dp, bottom = 8.dp)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        VideoCard(
-                            name = "John",
-                            age = 8,
-                            dateTime = "Sunday, 10:30AM",
-                            isApprovedSection = false,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp, top = 8.dp, bottom = 16.dp)
-                        )
-                        VideoCard(
-                            name = "sissy",
-                            age = 11,
-                            dateTime = "Sunday, 12:15PM",
-                            isApprovedSection = false,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 8.dp, top = 8.dp, bottom = 16.dp)
-                        )
-                    }
 
-                    Button(
-                        onClick = { /* TODO: Show More logic */ },
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
+                        val unapprovedItems = specialState.items.filter { !it.approved }
+                        Text(
+                            text = "Unapproved Items: ${unapprovedItems.size}",
+                            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
+                            color = Color.Gray
                         )
-                    ) {
-                        Text(text = "Show More")
+
+                        if (unapprovedItems.isEmpty()) {
+                            Text(
+                                text = "No videos for approval",
+                                modifier = Modifier.padding(top = 8.dp),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        } else {
+                            Column {
+                                // Split into pairs for two-column layout
+                                unapprovedItems.chunked(2).forEach { pair ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        pair.forEachIndexed { index, item ->
+                                            VideoCard(
+                                                name = item.childName,
+                                                age = item.age,
+                                                guardianName = item.guardianName,
+                                                isApprovedSection = false,
+                                                onApproveClick = {
+                                                    if (!item.approved) {
+                                                        specialViewModel.onEvent(SpecialInterviewEvent.ToggleApproved(item))
+                                                    }
+                                                },
+                                                onCancelClick = {
+                                                    specialViewModel.onEvent(SpecialInterviewEvent.Delete(item))
+                                                    scope.launch {
+                                                        val result = snackbarHostState.showSnackbar(
+                                                            message = "Video Cancelled",
+                                                            actionLabel = "Undo",
+                                                            duration = SnackbarDuration.Short
+                                                        )
+                                                        if (result == SnackbarResult.ActionPerformed) {
+                                                            specialViewModel.onEvent(SpecialInterviewEvent.UndoDelete(item))
+                                                        }
+                                                    }
+                                                },
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .padding(
+                                                        start = if (index == 1) 8.dp else 0.dp,
+                                                        end = if (index == 0) 8.dp else 0.dp,
+                                                        top = 16.dp,
+                                                        bottom = 8.dp
+                                                    )
+                                            )
+                                        }
+                                        // Add empty spacer if the pair has only one item
+                                        if (pair.size == 1) {
+                                            Spacer(modifier = Modifier.weight(1f))
+                                        }
+                                    }
+                                }
+
+                                Button(
+                                    onClick = { /* TODO: Show More logic */ },
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = Color.White
+                                    )
+                                ) {
+                                    Text(text = "Show More")
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
 
-        // --- Approved Videos ---
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .shadow(4.dp, shape = RectangleShape)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Videos that have been Approved", style = MaterialTheme.typography.titleLarge)
+            item {
+                // --- Approved Videos ---
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(vertical = 8.dp)
+                        .shadow(4.dp, shape = RectangleShape)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Videos that have been Approved", style = MaterialTheme.typography.titleLarge)
 
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        VideoCard(
-                            name = "Elizabeth",
-                            age = 9,
-                            contact = "Sat123@gmail.com",
-                            isApprovedSection = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp, top = 8.dp, bottom = 8.dp)
+                        // Debug: Show filtered item count
+                        val approvedItems = specialState.items.filter { it.approved }
+                        Text(
+                            text = "Approved Items: ${approvedItems.size}",
+                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                            color = Color.Gray
                         )
-                        VideoCard(
-                            name = "Bahran",
-                            age = 8,
-                            contact = "Sat123@gmail.com",
-                            isApprovedSection = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                        )
-                    }
 
-                    Button(
-                        onClick = { /* TODO: Show More logic */ },
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(text = "Show More")
+                        if (approvedItems.isEmpty()) {
+                            Text(
+                                text = "No approved videos",
+                                modifier = Modifier.padding(top = 8.dp),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        } else {
+                            Column {
+                                approvedItems.chunked(2).forEach { pair ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        pair.forEachIndexed { index, item ->
+                                            VideoCard(
+                                                name = item.childName,
+                                                age = item.age,
+                                                contact = item.guardianEmail,
+                                                isApprovedSection = true,
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .padding(
+                                                        start = if (index == 1) 8.dp else 0.dp,
+                                                        end = if (index == 0) 8.dp else 0.dp,
+                                                        top = 8.dp,
+                                                        bottom = 8.dp
+                                                    )
+                                            )
+                                        }
+                                        if (pair.size == 1) {
+                                            Spacer(modifier = Modifier.weight(1f))
+                                        }
+                                    }
+                                }
+
+                                Button(
+                                    onClick = { /* TODO: Show More logic */ },
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = Color.White
+                                    )
+                                ) {
+                                    Text(text = "Show More")
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -248,12 +318,15 @@ fun VideoCard(
     modifier: Modifier = Modifier,
     name: String,
     age: Int,
-    dateTime: String? = null,
-    contact: String? = null,
-    isApprovedSection: Boolean
+    guardianName: String? = null, // For unapproved items
+    contact: String? = null, // For approved items
+    isApprovedSection: Boolean,
+    onApproveClick: () -> Unit = {},
+    onCancelClick: () -> Unit = {}
 ) {
     Card(
-        modifier = modifier.shadow(4.dp, shape = RoundedCornerShape(20.dp))
+        modifier = modifier.shadow(4.dp, shape = RoundedCornerShape(20.dp)),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Icon(Icons.Default.Videocam, contentDescription = null)
@@ -265,12 +338,12 @@ fun VideoCard(
                     Text("Contact: $it", modifier = Modifier.padding(top = 4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             } else {
-                dateTime?.let {
-                    Text("Date and time: $it", modifier = Modifier.padding(top = 4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                guardianName?.let {
+                    Text("Guardian: $it", modifier = Modifier.padding(top = 4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Row(modifier = Modifier.padding(top = 8.dp)) {
                     Button(
-                        onClick = { /* Approve logic */ },
+                        onClick = onApproveClick,
                         modifier = Modifier.height(20.dp).width(70.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                     ) {
@@ -278,7 +351,7 @@ fun VideoCard(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = { /* Cancel logic */ },
+                        onClick = onCancelClick,
                         modifier = Modifier.height(20.dp).width(75.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
                     ) {

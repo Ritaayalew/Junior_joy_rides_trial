@@ -27,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -58,6 +59,7 @@ import com.example.trial_junior.feature_junior.domain.model.BasicInterviewItem
 import com.example.trial_junior.feature_junior.domain.model.InvitationItem
 import com.example.trial_junior.feature_junior.domain.model.SpecialInterviewItem
 import com.example.trial_junior.feature_junior.domain.model.WishListItem
+import com.example.trial_junior.feature_junior.presentation.components.AppBottomNavigation
 import com.example.trial_junior.feature_junior.presentation.components.BasicInterviewItemCard
 import com.example.trial_junior.feature_junior.presentation.components.InvitationItemCard
 import com.example.trial_junior.feature_junior.presentation.components.HalfScreenMenu
@@ -111,256 +113,262 @@ fun ProfileScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxSize()
-                .padding(bottom = 16.dp), // Added bottom padding
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(170.dp)
-                        .background(Color.Gray), // Always set the gray background
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Overlay background image if available and non-empty
-                    if (user?.backgroundImageUrl?.isNotEmpty() == true) {
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigation(navController = navController)
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            LazyColumn(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxSize()
+                    .padding(bottom = 16.dp), // Added bottom padding
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(170.dp)
+                            .background(Color.Gray), // Always set the gray background
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Overlay background image if available and non-empty
+                        if (user?.backgroundImageUrl?.isNotEmpty() == true) {
+                            Image(
+                                painter = rememberAsyncImagePainter(
+                                    model = user.backgroundImageUrl,
+                                ),
+                                contentDescription = "Background Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(170.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        // Always show profile image (default or selected)
                         Image(
-                            painter = rememberAsyncImagePainter(
-                                model = user.backgroundImageUrl,
-                            ),
-                            contentDescription = "Background Image",
+                            painter = if (user?.profileImageUrl?.isNotEmpty() == true) {
+                                rememberAsyncImagePainter(
+                                    model = user.profileImageUrl,
+                                    placeholder = painterResource(id = R.drawable.profile),
+                                    error = painterResource(id = R.drawable.profile)
+                                )
+                            } else {
+                                painterResource(id = R.drawable.profile)
+                            },
+                            contentDescription = "Profile Image",
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(170.dp),
+                                .size(120.dp)
+                                .absoluteOffset(y = 95.dp)
+                                .clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
                     }
-                    // Always show profile image (default or selected)
-                    Image(
-                        painter = if (user?.profileImageUrl?.isNotEmpty() == true) {
-                            rememberAsyncImagePainter(
-                                model = user.profileImageUrl,
-                                placeholder = painterResource(id = R.drawable.profile),
-                                error = painterResource(id = R.drawable.profile)
-                            )
-                        } else {
-                            painterResource(id = R.drawable.profile)
+                    Spacer(modifier = Modifier.height(60.dp))
+                    Text(
+                        text = user?.let { "${it.firstName} ${it.lastName}" } ?: "Full Name",
+                        fontSize = 26.sp,
+                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+                    )
+                    Text(
+                        text = user?.email ?: "name@gmail.com",
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate(Screen.EditProfileScreen.route) {
+                                popUpTo(Screen.ProfileScreen.route) { inclusive = false }
+                                launchSingleTop = true
+                            }
                         },
-                        contentDescription = "Profile Image",
                         modifier = Modifier
-                            .size(120.dp)
-                            .absoluteOffset(y = 95.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                            .width(201.dp)
+                            .height(44.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFDEDEDE)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = ContentDescriptions.UPDATE_ITEM,
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .size(48.dp)
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text("Edit profile", fontSize = 20.sp, color = Color.Black)
+                    }
+                    Spacer(modifier = Modifier.height(45.dp))
+                    Text(
+                        text = "My Applications",
+                        fontSize = 30.sp,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
                     )
+                    Spacer(modifier = Modifier.height(25.dp))
                 }
-                Spacer(modifier = Modifier.height(60.dp))
-                Text(
-                    text = user?.let { "${it.firstName} ${it.lastName}" } ?: "Full Name",
-                    fontSize = 26.sp,
-                    color = Color.Black,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp)
-                )
-                Text(
-                    text = user?.email ?: "name@gmail.com",
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(10.dp))
 
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.EditProfileScreen.route) {
-                            popUpTo(Screen.ProfileScreen.route) { inclusive = false }
-                            launchSingleTop = true
+                items((user?.invitations ?: emptyList()) + (user?.basicInterviews ?: emptyList()) +
+                        (user?.specialInterviews ?: emptyList()) + (user?.wishLists ?: emptyList())) { item ->
+                    when (item) {
+                        is InvitationItem -> {
+                            InvitationItemCard(
+                                invitation = item,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                onDeleteClick = {
+                                    invitationViewModel.onEvent(InvitationListEvent.Delete(item))
+                                    scope.launch {
+                                        val undo = snackbarHostState.showSnackbar(
+                                            message = "Invitation Deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (undo == SnackbarResult.ActionPerformed) {
+                                            invitationViewModel.onEvent(InvitationListEvent.UndoDelete(item))
+                                        }
+                                    }
+                                },
+                                onEditClick = {
+                                    navController.navigate(
+                                        Screen.InvitationScreen.route + "?invitationId=${item.id}"
+                                    )
+                                }
+                            )
                         }
-                    },
-                    modifier = Modifier
-                        .width(201.dp)
-                        .height(44.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFDEDEDE)
-                    )
+                        is BasicInterviewItem -> {
+                            BasicInterviewItemCard(
+                                basicInterview = item,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                onDeleteClick = {
+                                    basicInterviewViewModel.onEvent(BasicInterviewEvent.Delete(item))
+                                    scope.launch {
+                                        val undo = snackbarHostState.showSnackbar(
+                                            message = "Basic Interview Deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (undo == SnackbarResult.ActionPerformed) {
+                                            basicInterviewViewModel.onEvent(BasicInterviewEvent.UndoDelete(item))
+                                        }
+                                    }
+                                },
+                                onEditClick = {
+                                    navController.navigate(
+                                        Screen.BasicInterviewScreen.route + "?basicInterviewId=${item.id}"
+                                    )
+                                }
+                            )
+                        }
+                        is SpecialInterviewItem -> {
+                            SpecialInterviewItemCard(
+                                specialInterview = item,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                onDeleteClick = {
+                                    specialInterviewViewModel.onEvent(SpecialInterviewEvent.Delete(item))
+                                    scope.launch {
+                                        val undo = snackbarHostState.showSnackbar(
+                                            message = "Special Interview Deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (undo == SnackbarResult.ActionPerformed) {
+                                            specialInterviewViewModel.onEvent(SpecialInterviewEvent.UndoDelete(item))
+                                        }
+                                    }
+                                },
+                                onEditClick = {
+                                    navController.navigate(
+                                        Screen.SpecialInterviewScreen.route + "?specialInterviewId=${item.id}"
+                                    )
+                                }
+                            )
+                        }
+                        is WishListItem -> {
+                            WishlistItemCard(
+                                wishlistItem = item,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                onDeleteClick = {
+                                    wishListViewModel.onEvent(WishListEvent.Delete(item))
+                                    scope.launch {
+                                        val undo = snackbarHostState.showSnackbar(
+                                            message = "Wishlist Item Deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (undo == SnackbarResult.ActionPerformed) {
+                                            wishListViewModel.onEvent(WishListEvent.UndoDelete(item))
+                                        }
+                                    }
+                                },
+                                onEditClick = {
+                                    navController.navigate(
+                                        Screen.WishListScreen.route + "?wishListId=${item.id}"
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Loading Indicator
+            if (userState.isLoading) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = ContentDescriptions.UPDATE_ITEM,
-                        tint = Color.Black,
-                        modifier = Modifier
-                            .size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text("Edit profile", fontSize = 20.sp, color = Color.Black)
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
-                Spacer(modifier = Modifier.height(45.dp))
-                Text(
-                    text = "My Applications",
-                    fontSize = 30.sp,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
+            }
+
+            // Snackbar for error messages
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+
+            // Side Menu
+            if (isMenuOpen) {
+                HalfScreenMenu(
+                    navController = navController,
+                    isMenuOpen = remember { mutableStateOf(isMenuOpen) },
+                    modifier = Modifier,
+                    onDismiss = { isMenuOpen = false }
                 )
-                Spacer(modifier = Modifier.height(25.dp))
-            }
-
-            items((user?.invitations ?: emptyList()) + (user?.basicInterviews ?: emptyList()) +
-                    (user?.specialInterviews ?: emptyList()) + (user?.wishLists ?: emptyList())) { item ->
-                when (item) {
-                    is InvitationItem -> {
-                        InvitationItemCard(
-                            invitation = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onDeleteClick = {
-                                invitationViewModel.onEvent(InvitationListEvent.Delete(item))
-                                scope.launch {
-                                    val undo = snackbarHostState.showSnackbar(
-                                        message = "Invitation Deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (undo == SnackbarResult.ActionPerformed) {
-                                        invitationViewModel.onEvent(InvitationListEvent.UndoDelete(item))
-                                    }
-                                }
-                            },
-                            onEditClick = {
-                                navController.navigate(
-                                    Screen.InvitationScreen.route + "?invitationId=${item.id}"
-                                )
-                            }
-                        )
-                    }
-                    is BasicInterviewItem -> {
-                        BasicInterviewItemCard(
-                            basicInterview = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onDeleteClick = {
-                                basicInterviewViewModel.onEvent(BasicInterviewEvent.Delete(item))
-                                scope.launch {
-                                    val undo = snackbarHostState.showSnackbar(
-                                        message = "Basic Interview Deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (undo == SnackbarResult.ActionPerformed) {
-                                        basicInterviewViewModel.onEvent(BasicInterviewEvent.UndoDelete(item))
-                                    }
-                                }
-                            },
-                            onEditClick = {
-                                navController.navigate(
-                                    Screen.BasicInterviewScreen.route + "?basicInterviewId=${item.id}"
-                                )
-                            }
-                        )
-                    }
-                    is SpecialInterviewItem -> {
-                        SpecialInterviewItemCard(
-                            specialInterview = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onDeleteClick = {
-                                specialInterviewViewModel.onEvent(SpecialInterviewEvent.Delete(item))
-                                scope.launch {
-                                    val undo = snackbarHostState.showSnackbar(
-                                        message = "Special Interview Deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (undo == SnackbarResult.ActionPerformed) {
-                                        specialInterviewViewModel.onEvent(SpecialInterviewEvent.UndoDelete(item))
-                                    }
-                                }
-                            },
-                            onEditClick = {
-                                navController.navigate(
-                                    Screen.SpecialInterviewScreen.route + "?specialInterviewId=${item.id}"
-                                )
-                            }
-                        )
-                    }
-                    is WishListItem -> {
-                        WishlistItemCard(
-                            wishlistItem = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onDeleteClick = {
-                                wishListViewModel.onEvent(WishListEvent.Delete(item))
-                                scope.launch {
-                                    val undo = snackbarHostState.showSnackbar(
-                                        message = "Wishlist Item Deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (undo == SnackbarResult.ActionPerformed) {
-                                        wishListViewModel.onEvent(WishListEvent.UndoDelete(item))
-                                    }
-                                }
-                            },
-                            onEditClick = {
-                                navController.navigate(
-                                    Screen.WishListScreen.route + "?wishListId=${item.id}"
-                                )
-                            }
-                        )
-                    }
-                }
             }
         }
 
-        // Loading Indicator
-        if (userState.isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        // Toggle menu
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            IconButton(onClick = { isMenuOpen = !isMenuOpen }) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Open Menu",
+                    tint = Color.Black
+                )
             }
-        }
-
-        // Snackbar for error messages
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-
-        // Side Menu
-        if (isMenuOpen) {
-            HalfScreenMenu(
-                navController = navController,
-                isMenuOpen = remember { mutableStateOf(isMenuOpen) },
-                modifier = Modifier,
-                onDismiss = { isMenuOpen = false }
-            )
-        }
-    }
-
-    // Toggle menu
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        contentAlignment = Alignment.TopEnd
-    ) {
-        IconButton(onClick = { isMenuOpen = !isMenuOpen }) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Open Menu",
-                tint = Color.Black
-            )
         }
     }
 }

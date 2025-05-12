@@ -81,11 +81,12 @@ fun SharedDashboardComponents(
 }
 
 
+
 @Composable
-fun StatisticCards(usersCount: Int, eventsCount: Int, showsCount: Int, birthdaysCount: Int) {
+fun StatisticCards(usersCount: Int, eventsCount: Int, showsCount: Int, birthdaysCount: Int, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -111,8 +112,8 @@ fun StatCard(label: String, count: String, icon: ImageVector, iconTint: Color) {
         modifier = Modifier
             .size(140.dp)
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White) // Set to white
     ) {
         Column(
             modifier = Modifier
